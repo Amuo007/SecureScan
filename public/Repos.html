@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureScan — Repositories</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --text: #0f172a;
+      --muted: #64748b;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      font-family: 'IBM Plex Sans', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    /* NAV */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; color: var(--text);
+    }
+    .nav-logo-icon {
+      width: 28px; height: 28px; background: var(--accent);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 14px; height: 14px; }
+    .nav-user {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.85rem; color: var(--muted);
+    }
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+    }
+    /* MAIN */
+    main { max-width: 900px; margin: 0 auto; padding: 40px 24px; position: relative; z-index: 1; }
+    .page-header { margin-bottom: 32px; }
+    .page-header h2 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.3rem; font-weight: 600; margin-bottom: 6px;
+    }
+    .page-header p { color: var(--muted); font-size: 0.875rem; }
+    /* SEARCH */
+    .search-bar {
+      display: flex; gap: 10px; margin-bottom: 24px;
+    }
+    .search-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: var(--muted); }
+    /* REPO CARD */
+    .repo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .repo-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      color: var(--text);
+      box-shadow: 0 4px 16px rgba(37,99,235,0.08);
+    }
+    .repo-top {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    }
+    .repo-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--accent); margin-bottom: 4px;
+    }
+    .repo-desc { font-size: 0.825rem; color: var(--muted); line-height: 1.5; }
+    .repo-meta {
+      display: flex; gap: 16px; margin-top: 14px;
+      font-size: 0.775rem; color: var(--muted);
+      align-items: center; flex-wrap: wrap;
+    }
+    .lang-dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px;
+    }
+    .badge-scan {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; padding: 3px 9px;
+      border-radius: 4px; font-weight: 600;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .badge-high { color: var(--danger); border-color: var(--danger); background: rgba(239,68,68,0.08); }
+    .badge-med  { color: var(--warning); border-color: var(--warning); background: rgba(245,158,11,0.08); }
+    .badge-low  { color: var(--success); border-color: var(--success); background: rgba(34,197,94,0.08); }
+    .badge-new  { color: var(--muted); border-color: var(--border); background: transparent; }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 12px; margin-top: 28px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="login.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      SecureScan
+    </a>
+    <div class="nav-user">
+      <img class="avatar" id="nav-avatar" src="" alt="avatar"/>
+      <span id="nav-username">Loading...</span>
+      <a href="/auth/logout" style="font-size:0.8rem;color:var(--muted);margin-left:8px;text-decoration:none;">Logout</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h2>Select a Repository</h2>
+      <p>Choose a repository to run a cybersecurity risk assessment on.</p>
+    </div>
+
+    <div class="search-bar">
+      <input class="search-input" id="search-input" type="text" placeholder="Search repositories..."/>
+    </div>
+
+    <div id="repo-list">
+      <!-- Repos injected here by JS -->
+      <div style="text-align:center;padding:60px 0;color:var(--muted);font-size:0.9rem;">
+        Loading repositories...
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const LANG_COLORS = {
+      Python: '#3572A5', JavaScript: '#f1e05a', TypeScript: '#2b7489',
+      'C#': '#178600', Swift: '#F05138', Rust: '#dea584',
+      Go: '#00ADD8', Java: '#b07219', Ruby: '#701516', HTML: '#e34c26',
+      CSS: '#563d7c', Shell: '#89e051', Kotlin: '#A97BFF', Dart: '#00B4AB',
+    };
+
+    function timeAgo(dateStr) {
+      const diff = Date.now() - new Date(dateStr);
+      const days = Math.floor(diff / 86400000);
+      if (days === 0) return 'Updated today';
+      if (days === 1) return 'Updated yesterday';
+      if (days < 7) return `Updated ${days} days ago`;
+      if (days < 30) return `Updated ${Math.floor(days/7)} week${Math.floor(days/7)>1?'s':''} ago`;
+      if (days < 365) return `Updated ${Math.floor(days/30)} month${Math.floor(days/30)>1?'s':''} ago`;
+      return `Updated ${Math.floor(days/365)} year${Math.floor(days/365)>1?'s':''} ago`;
+    }
+
+    function renderRepos(repos) {
+      const list = document.getElementById('repo-list');
+      if (!repos.length) {
+        list.innerHTML = '<div style="text-align:center;padding:60px 0;color:var(--muted);">No repositories found.</div>';
+        return;
+      }
+
+      list.innerHTML = `
+        <div class="section-label">${repos.length} repositories</div>
+        ${repos.map(repo => `
+          <a href="/dashboard.html?repo=${encodeURIComponent(repo.full_name)}" class="repo-card">
+            <div class="repo-top">
+              <div>
+                <div class="repo-name">
+                  ${repo.full_name}
+                  ${repo.private ? '<span style="font-size:0.65rem;background:#f1f5f9;border:1px solid #e2e8f0;color:#64748b;padding:2px 6px;border-radius:3px;margin-left:8px;font-family:IBM Plex Mono,monospace;">PRIVATE</span>' : ''}
+                </div>
+                <div class="repo-desc">${repo.description || '<span style="color:#94a3b8;font-style:italic;">No description</span>'}</div>
+              </div>
+              <span class="badge-scan badge-new">NOT SCANNED</span>
+            </div>
+            <div class="repo-meta">
+              ${repo.language ? `<span><span class="lang-dot" style="background:${LANG_COLORS[repo.language] || '#94a3b8'}"></span>${repo.language}</span>` : ''}
+              <span>${timeAgo(repo.updated_at)}</span>
+            </div>
+          </a>
+        `).join('')}
+      `;
+    }
+
+    async function init() {
+      try {
+        const res = await fetch('/api/repos');
+        if (res.status === 401) { window.location = '/'; return; }
+        const data = await res.json();
+
+        // Set nav user info
+        document.getElementById('nav-username').textContent = data.user.login;
+        document.getElementById('nav-avatar').src = data.user.avatar_url;
+
+        // Store all repos for search
+        window.allRepos = data.repos;
+        renderRepos(data.repos);
+
+      } catch (err) {
+        document.getElementById('repo-list').innerHTML =
+          '<div style="text-align:center;padding:60px 0;color:#dc2626;">Failed to load repositories.</div>';
+      }
+    }
+
+    // Search filter
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = window.allRepos.filter(r =>
+        r.name.toLowerCase().includes(q) ||
+        (r.description || '').toLowerCase().includes(q)
+      );
+      renderRepos(filtered);
+    });
+
+    init();
+  </script>
+</body>
+</html>
