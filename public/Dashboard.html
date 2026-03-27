@@ -21,227 +21,130 @@
       --critical: #b91c1c;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      font-family: 'IBM Plex Sans', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-    }
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-    }
+    body { background: var(--bg); font-family: 'IBM Plex Sans', sans-serif; color: var(--text); min-height: 100vh; }
+
     /* NAV */
     nav {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      height: 56px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 56px;
       display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 100;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .nav-logo {
-      display: flex; align-items: center; gap: 10px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-weight: 600; font-size: 0.95rem;
-      text-decoration: none; color: var(--text);
-    }
-    .nav-logo-icon {
-      width: 28px; height: 28px; background: var(--accent);
-      border-radius: 6px; display: flex; align-items: center; justify-content: center;
-    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.95rem; text-decoration: none; color: var(--text); }
+    .nav-logo-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
     .nav-logo-icon svg { width: 14px; height: 14px; }
     .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-repo {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.8rem; color: var(--muted);
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 6px; padding: 4px 10px;
-    }
+    .nav-repo { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; }
     .nav-user { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
     .avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
-    .btn-rescan {
-      background: transparent; border: 1px solid var(--accent);
-      color: var(--accent); border-radius: 6px;
-      padding: 5px 14px; font-size: 0.8rem; font-family: 'IBM Plex Sans', sans-serif;
-      cursor: pointer; transition: background 0.15s;
-    }
-    .btn-rescan:hover { background: rgba(59,130,246,0.1); }
-    /* LAYOUT */
-    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; position: relative; z-index: 1; }
-    .repo-heading {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
-    }
-    .repo-heading h2 {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.1rem; font-weight: 600;
-    }
+    .btn-rescan { background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 6px; padding: 5px 14px; font-size: 0.8rem; font-family: 'IBM Plex Sans', sans-serif; cursor: pointer; transition: background 0.15s; }
+    .btn-rescan:hover { background: rgba(37,99,235,0.08); }
+    .btn-rescan:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* MAIN */
+    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .repo-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .repo-heading h2 { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; font-weight: 600; }
     .scan-time { font-size: 0.78rem; color: var(--muted); }
-    /* TOP ROW */
-    .top-row { display: grid; grid-template-columns: 220px 1fr; gap: 16px; margin-bottom: 16px; }
-    /* SCORE CARD */
-    .score-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px 20px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center;
+
+    /* ── SCANNING SCREEN ── */
+    #scanning-screen {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 48px 40px; text-align: center;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
+    .scan-icon { font-size: 2.5rem; margin-bottom: 16px; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    #scanning-screen h3 { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; margin-bottom: 8px; }
+    #scan-status { color: var(--muted); font-size: 0.875rem; margin-bottom: 24px; min-height: 20px; }
+    .progress-bar-wrap { background: var(--bg); border-radius: 999px; height: 6px; width: 100%; max-width: 400px; margin: 0 auto 24px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.4s ease; width: 5%; }
+    #scan-log {
+      text-align: left; background: #0f172a; border-radius: 8px;
+      padding: 16px; max-height: 180px; overflow-y: auto;
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+      color: #94a3b8; max-width: 600px; margin: 0 auto;
+    }
+    #scan-log .log-line { margin-bottom: 4px; }
+    #scan-log .log-line::before { content: '> '; color: #2563eb; }
+
+    /* ── DASHBOARD ── */
+    #dashboard-screen { display: none; }
+    .top-row { display: grid; grid-template-columns: 220px 1fr; gap: 16px; margin-bottom: 16px; }
+    .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
     .score-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; font-family: 'IBM Plex Mono', monospace; }
-    .score-num {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 4rem; font-weight: 600; line-height: 1;
-      color: var(--danger); margin-bottom: 8px;
-    }
-    .score-badge {
-      font-size: 0.75rem; font-weight: 600; padding: 4px 12px;
-      border-radius: 20px; letter-spacing: 0.05em;
-      background: rgba(239,68,68,0.12); color: var(--danger); border: 1px solid var(--danger);
-    }
+    .score-num { font-family: 'IBM Plex Mono', monospace; font-size: 4rem; font-weight: 600; line-height: 1; margin-bottom: 8px; }
+    .score-badge { font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.05em; border: 1px solid; }
     .score-sub { font-size: 0.75rem; color: var(--muted); margin-top: 10px; }
-    /* NIST GRID */
-    .nist-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 22px;
-    }
+    .score-summary { font-size: 0.78rem; color: var(--muted); margin-top: 12px; line-height: 1.5; text-align: center; }
+
+    .nist-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
     .nist-title { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace; }
     .nist-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-    .nist-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 10px;
-      text-align: center;
-    }
-    .nist-grade {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.8rem; font-weight: 600; line-height: 1; margin-bottom: 6px;
-    }
+    .nist-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 10px; text-align: center; }
+    .nist-grade { font-family: 'IBM Plex Mono', monospace; font-size: 1.8rem; font-weight: 600; line-height: 1; margin-bottom: 6px; }
     .nist-name { font-size: 0.7rem; color: var(--muted); }
-    .grade-f { color: var(--danger); }
-    .grade-d { color: #f97316; }
+    .grade-f { color: var(--critical); }
+    .grade-d { color: #ea580c; }
     .grade-c { color: var(--warning); }
-    .grade-b { color: #84cc16; }
+    .grade-b { color: #65a30d; }
     .grade-a { color: var(--success); }
-    /* BOTTOM ROW */
+
     .bottom-row { display: grid; grid-template-columns: 1fr 340px; gap: 16px; margin-top: 16px; }
-    /* VULN LIST */
-    .vuln-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .card-header {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+    .card-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .card-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; font-weight: 600; }
-    .vuln-count { font-size: 0.75rem; color: var(--muted); }
-    .vuln-item {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 0.1s;
-      display: flex; align-items: flex-start; gap: 12px;
-    }
+    .card-count { font-size: 0.75rem; color: var(--muted); }
+
+    .vuln-item { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; cursor: pointer; transition: background 0.1s; }
     .vuln-item:last-child { border-bottom: none; }
     .vuln-item:hover { background: var(--surface2); }
     .sev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-    .sev-critical { background: var(--critical); }
-    .sev-high { background: var(--danger); }
-    .sev-med { background: var(--warning); }
-    .sev-low { background: var(--success); }
+    .dot-critical { background: var(--critical); }
+    .dot-high { background: var(--danger); }
+    .dot-medium { background: var(--warning); }
+    .dot-low { background: var(--success); }
     .vuln-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 3px; }
     .vuln-meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
     .vuln-file { font-family: 'IBM Plex Mono', monospace; }
-    .sev-badge {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.65rem; padding: 2px 7px;
-      border-radius: 3px; font-weight: 600; margin-left: auto; flex-shrink: 0;
-    }
-    .sb-critical { background: rgba(220,38,38,0.15); color: #dc2626; }
-    .sb-high { background: rgba(239,68,68,0.12); color: var(--danger); }
-    .sb-med { background: rgba(245,158,11,0.12); color: var(--warning); }
-    .sb-low { background: rgba(34,197,94,0.12); color: var(--success); }
-    /* RECOMMENDATIONS */
-    .rec-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .rec-item {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex; gap: 12px; align-items: flex-start;
-    }
+    .sev-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; padding: 2px 7px; border-radius: 3px; font-weight: 600; margin-left: auto; flex-shrink: 0; }
+    .sb-critical { background: rgba(185,28,28,0.1); color: var(--critical); }
+    .sb-high { background: rgba(220,38,38,0.1); color: var(--danger); }
+    .sb-medium { background: rgba(217,119,6,0.1); color: var(--warning); }
+    .sb-low { background: rgba(22,163,74,0.1); color: var(--success); }
+
+    /* Vuln detail expand */
+    .vuln-detail { display: none; padding: 12px 20px 16px 40px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 0.82rem; line-height: 1.6; }
+    .vuln-detail.open { display: block; }
+    .fix-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 14px; margin-top: 8px; font-size: 0.8rem; color: #166534; }
+    .fix-box strong { display: block; margin-bottom: 3px; }
+
+    .rec-item { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start; }
     .rec-item:last-child { border-bottom: none; }
-    .rec-num {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.7rem; font-weight: 600;
-      color: var(--accent);
-      background: rgba(59,130,246,0.1);
-      border: 1px solid rgba(59,130,246,0.2);
-      border-radius: 4px;
-      width: 22px; height: 22px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 1px;
-    }
+    .rec-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 600; color: var(--accent); background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 4px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
     .rec-text { font-size: 0.82rem; line-height: 1.5; }
     .rec-tag { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
+
     /* CHAT */
-    .chat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-top: 16px;
-      overflow: hidden;
-    }
-    .chat-messages { padding: 16px 18px; min-height: 120px; max-height: 180px; overflow-y: auto; }
+    .chat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-top: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+    .chat-messages { padding: 16px 18px; min-height: 100px; max-height: 200px; overflow-y: auto; }
     .chat-msg { margin-bottom: 12px; }
-    .chat-msg.ai .bubble {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 8px 8px 8px 2px;
-      padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; display: inline-block; max-width: 85%;
-    }
+    .chat-msg.ai .bubble { background: var(--bg); border: 1px solid var(--border); border-radius: 8px 8px 8px 2px; padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; display: inline-block; max-width: 85%; }
     .chat-msg.user { text-align: right; }
-    .chat-msg.user .bubble {
-      background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.2);
-      border-radius: 8px 8px 2px 8px;
-      padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; display: inline-block; max-width: 85%;
-    }
+    .chat-msg.user .bubble { background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 8px 8px 2px 8px; padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; display: inline-block; max-width: 85%; }
     .chat-who { font-size: 0.7rem; color: var(--muted); margin-bottom: 3px; font-family: 'IBM Plex Mono', monospace; }
-    .chat-input-row {
-      display: flex; gap: 8px; padding: 12px 16px;
-      border-top: 1px solid var(--border);
-    }
-    .chat-input {
-      flex: 1; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 6px; padding: 8px 12px;
-      color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 0.83rem;
-      outline: none;
-    }
+    .chat-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); }
+    .chat-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 0.83rem; outline: none; }
     .chat-input:focus { border-color: var(--accent); }
     .chat-input::placeholder { color: var(--muted); }
-    .chat-send {
-      background: var(--accent); border: none; border-radius: 6px;
-      padding: 8px 14px; color: white; font-size: 0.83rem;
-      cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500;
-    }
-    .chat-send:hover { background: var(--accent-dim, #1d4ed8); }
+    .chat-send { background: var(--accent); border: none; border-radius: 6px; padding: 8px 14px; color: white; font-size: 0.83rem; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; }
+    .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ERROR */
+    #error-screen { display: none; text-align: center; padding: 60px 24px; }
+    #error-screen h3 { font-family: 'IBM Plex Mono', monospace; color: var(--danger); margin-bottom: 8px; }
+
     @media (max-width: 768px) {
       .top-row, .bottom-row { grid-template-columns: 1fr; }
       .nist-grid { grid-template-columns: repeat(3, 1fr); }
@@ -250,7 +153,7 @@
 </head>
 <body>
   <nav>
-    <a href="login.html" class="nav-logo">
+    <a href="/" class="nav-logo">
       <div class="nav-logo-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -259,8 +162,8 @@
       SecureScan
     </a>
     <div class="nav-right">
-      <span class="nav-repo">amuo007 / iiab-search</span>
-      <button class="btn-rescan">↻ Rescan</button>
+      <span class="nav-repo" id="nav-repo">Loading...</span>
+      <button class="btn-rescan" id="btn-rescan" onclick="startScan(true)" disabled>↻ Rescan</button>
       <div class="nav-user">
         <img class="avatar" id="nav-avatar" src="" alt="avatar"/>
         <span id="nav-username">...</span>
@@ -270,208 +173,343 @@
 
   <main>
     <div class="repo-heading">
-      <h2>Risk Assessment — iiab-search</h2>
-      <span class="scan-time">Last scanned: March 25, 2026 · 14 files analyzed · 3 deps checked</span>
+      <h2 id="page-title">Scanning repository...</h2>
+      <span class="scan-time" id="scan-time"></span>
     </div>
 
-    <!-- TOP ROW: Score + NIST -->
-    <div class="top-row">
-      <div class="score-card">
-        <div class="score-label">Risk Score</div>
-        <div class="score-num">38</div>
-        <div class="score-badge">HIGH RISK</div>
-        <div class="score-sub">out of 100 · lower is worse</div>
+    <!-- SCANNING SCREEN -->
+    <div id="scanning-screen">
+      <div class="scan-icon">🔍</div>
+      <h3>Analyzing Security Posture</h3>
+      <p id="scan-status">Connecting to repository...</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar"></div>
       </div>
-      <div class="nist-card">
-        <div class="nist-title">NIST Framework Scores</div>
-        <div class="nist-grid">
-          <div class="nist-item">
-            <div class="nist-grade grade-d">D</div>
-            <div class="nist-name">Identify</div>
-          </div>
-          <div class="nist-item">
-            <div class="nist-grade grade-f">F</div>
-            <div class="nist-name">Protect</div>
-          </div>
-          <div class="nist-item">
-            <div class="nist-grade grade-c">C</div>
-            <div class="nist-name">Detect</div>
-          </div>
-          <div class="nist-item">
-            <div class="nist-grade grade-d">D</div>
-            <div class="nist-name">Respond</div>
-          </div>
-          <div class="nist-item">
-            <div class="nist-grade grade-b">B</div>
-            <div class="nist-name">Recover</div>
+      <div id="scan-log"></div>
+    </div>
+
+    <!-- ERROR SCREEN -->
+    <div id="error-screen">
+      <h3>Scan Failed</h3>
+      <p id="error-msg" style="color:var(--muted);font-size:0.875rem;"></p>
+      <a href="/repos.html" style="display:inline-block;margin-top:16px;color:var(--accent);font-size:0.875rem;">← Back to repos</a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard-screen">
+
+      <div class="top-row">
+        <div class="score-card">
+          <div class="score-label">Risk Score</div>
+          <div class="score-num" id="score-num">--</div>
+          <div class="score-badge" id="score-badge">--</div>
+          <div class="score-sub">out of 100 · lower is worse</div>
+          <div class="score-summary" id="score-summary"></div>
+        </div>
+        <div class="nist-card">
+          <div class="nist-title">NIST Framework Scores</div>
+          <div class="nist-grid" id="nist-grid">
+            <!-- injected by JS -->
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- BOTTOM ROW: Vulns + Recommendations -->
-    <div class="bottom-row">
-      <div class="vuln-card">
+      <div class="bottom-row">
+        <div class="card" id="vuln-card">
+          <div class="card-header">
+            <span class="card-title">Vulnerabilities Found</span>
+            <span class="card-count" id="vuln-count">--</span>
+          </div>
+          <div id="vuln-list">
+            <!-- injected by JS -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Top Priorities</span>
+          </div>
+          <div id="rec-list">
+            <!-- injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- FIX-IT CHAT -->
+      <div class="chat-card">
         <div class="card-header">
-          <span class="card-title">Vulnerabilities Found</span>
-          <span class="vuln-count">7 issues · 2 critical</span>
+          <span class="card-title">Ask AI About This Repo</span>
+          <span class="card-count">Context-aware · knows your scan results</span>
         </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-critical"></div>
-          <div style="flex:1">
-            <div class="vuln-title">Hardcoded API key in source code</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">config.py</span>
-              <span>Protect · Identify</span>
-            </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-msg ai">
+            <div class="chat-who">SecureScan AI</div>
+            <div class="bubble" id="chat-intro">Scan complete. Ask me anything about the vulnerabilities found or how to fix them.</div>
           </div>
-          <span class="sev-badge sb-critical">CRITICAL</span>
         </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-critical"></div>
-          <div style="flex:1">
-            <div class="vuln-title">.env file committed to repository history</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">commit: a3f92c1</span>
-              <span>Protect</span>
-            </div>
-          </div>
-          <span class="sev-badge sb-critical">CRITICAL</span>
-        </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-high"></div>
-          <div style="flex:1">
-            <div class="vuln-title">Outdated dependency with known CVE</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">requirements.txt</span>
-              <span>fastapi 0.95.0 · CVE-2024-24762</span>
-            </div>
-          </div>
-          <span class="sev-badge sb-high">HIGH</span>
-        </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-high"></div>
-          <div style="flex:1">
-            <div class="vuln-title">No authentication on API endpoints</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">main.py</span>
-              <span>Protect · Detect</span>
-            </div>
-          </div>
-          <span class="sev-badge sb-high">HIGH</span>
-        </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-med"></div>
-          <div style="flex:1">
-            <div class="vuln-title">No rate limiting on search endpoint</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">routes/search.py</span>
-              <span>Protect</span>
-            </div>
-          </div>
-          <span class="sev-badge sb-med">MEDIUM</span>
-        </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-med"></div>
-          <div style="flex:1">
-            <div class="vuln-title">Debug mode enabled in production config</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">config.py</span>
-              <span>Identify · Detect</span>
-            </div>
-          </div>
-          <span class="sev-badge sb-med">MEDIUM</span>
-        </div>
-
-        <div class="vuln-item">
-          <div class="sev-dot sev-low"></div>
-          <div style="flex:1">
-            <div class="vuln-title">Missing security headers in HTTP responses</div>
-            <div class="vuln-meta">
-              <span class="vuln-file">main.py</span>
-              <span>Protect</span>
-            </div>
-          </div>
-          <span class="sev-badge sb-low">LOW</span>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" type="text" placeholder="Ask about a vulnerability or how to fix something..."/>
+          <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
         </div>
       </div>
 
-      <!-- RECOMMENDATIONS -->
-      <div class="rec-card">
-        <div class="card-header">
-          <span class="card-title">Top Priorities</span>
-        </div>
-        <div class="rec-item">
-          <div class="rec-num">1</div>
-          <div>
-            <div class="rec-text">Remove the hardcoded API key from config.py and move it to an environment variable immediately.</div>
-            <div class="rec-tag">Protect · Critical</div>
-          </div>
-        </div>
-        <div class="rec-item">
-          <div class="rec-num">2</div>
-          <div>
-            <div class="rec-text">Rotate all credentials that were in the .env file committed to git history — assume they are compromised.</div>
-            <div class="rec-tag">Protect · Critical</div>
-          </div>
-        </div>
-        <div class="rec-item">
-          <div class="rec-num">3</div>
-          <div>
-            <div class="rec-text">Update fastapi to the latest version to patch CVE-2024-24762 (request smuggling vulnerability).</div>
-            <div class="rec-tag">Protect · High</div>
-          </div>
-        </div>
-        <div class="rec-item">
-          <div class="rec-num">4</div>
-          <div>
-            <div class="rec-text">Add API key authentication to all endpoints before deploying this service on the network.</div>
-            <div class="rec-tag">Protect · High</div>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <!-- FIX-IT CHAT -->
-    <div class="chat-card">
-      <div class="card-header">
-        <span class="card-title">Ask AI About This Repo</span>
-        <span class="vuln-count">Context-aware · knows your codebase</span>
-      </div>
-      <div class="chat-messages">
-        <div class="chat-msg ai">
-          <div class="chat-who">SecureScan AI</div>
-          <div class="bubble">I've analyzed <strong>iiab-search</strong>. Your biggest issue is the hardcoded API key in <code>config.py</code> and a leaked <code>.env</code> file in commit history. Ask me anything about these vulnerabilities or how to fix them.</div>
-        </div>
-        <div class="chat-msg user">
-          <div class="chat-who">You</div>
-          <div class="bubble">How do I remove a secret from git history?</div>
-        </div>
-        <div class="chat-msg ai">
-          <div class="chat-who">SecureScan AI</div>
-          <div class="bubble">Use <code>git filter-repo</code> to rewrite history and remove the file. Then force-push and rotate the credentials — anyone who cloned the repo may already have them.</div>
-        </div>
-      </div>
-      <div class="chat-input-row">
-        <input class="chat-input" type="text" placeholder="Ask about a vulnerability, how to fix something..."/>
-        <button class="chat-send">Send</button>
-      </div>
-    </div>
-
   </main>
-<script>
-  fetch('/api/me').then(r => r.json()).then(data => {
-    if (data.user) {
-      document.getElementById('nav-avatar').src = data.user.avatar_url;
-      document.getElementById('nav-username').textContent = data.user.login;
+
+  <script>
+    // ── Parse repo from URL ──────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const repoFullName = params.get('repo'); // e.g. "amuo007/iiab-search"
+
+    if (!repoFullName) {
+      window.location = '/repos.html';
     }
-  }).catch(() => {});
-</script>
+
+    const [owner, repo] = repoFullName.split('/');
+    let scanResult = null;
+    let scanProgress = 0;
+
+    // ── Set nav repo label ───────────────────────────────────
+    document.getElementById('nav-repo').textContent = repoFullName;
+    document.getElementById('page-title').textContent = `Scanning ${repoFullName}...`;
+
+    // ── Load user info ───────────────────────────────────────
+    fetch('/api/me').then(r => r.json()).then(data => {
+      if (data.user) {
+        document.getElementById('nav-avatar').src = data.user.avatar_url;
+        document.getElementById('nav-username').textContent = data.user.login;
+      }
+    });
+
+    // ── Progress helpers ─────────────────────────────────────
+    const STEPS = [
+      'Checking repository for changes',
+      'Fetching repository file structure',
+      'AI selecting security-relevant files',
+      'Fetching file contents',
+      'Analyzing',
+      'Scanning commit history',
+      'Generating final security report',
+      'Saving results',
+    ];
+
+    function updateProgress(msg) {
+      document.getElementById('scan-status').textContent = msg;
+
+      // Add to log
+      const log = document.getElementById('scan-log');
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.textContent = msg;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+
+      // Advance progress bar
+      scanProgress = Math.min(scanProgress + 10, 90);
+      document.getElementById('progress-bar').style.width = scanProgress + '%';
+    }
+
+    // ── Start SSE scan ───────────────────────────────────────
+    function startScan(isRescan = false) {
+      document.getElementById('scanning-screen').style.display = 'block';
+      document.getElementById('dashboard-screen').style.display = 'none';
+      document.getElementById('error-screen').style.display = 'none';
+      document.getElementById('btn-rescan').disabled = true;
+      document.getElementById('scan-log').innerHTML = '';
+      document.getElementById('page-title').textContent = isRescan
+        ? `Rescanning ${repoFullName}...`
+        : `Scanning ${repoFullName}...`;
+      scanProgress = 5;
+      document.getElementById('progress-bar').style.width = '5%';
+
+      const url = `/api/scan/stream/${owner}/${repo}${isRescan ? '?rescan=true' : ''}`;
+      const evtSource = new EventSource(url);
+
+      evtSource.onmessage = (e) => {
+        const { type, data } = JSON.parse(e.data);
+
+        if (type === 'status') {
+          updateProgress(data);
+        }
+
+        if (type === 'done') {
+          evtSource.close();
+          scanProgress = 100;
+          document.getElementById('progress-bar').style.width = '100%';
+          document.getElementById('scan-status').textContent = 'Scan complete!';
+          setTimeout(() => renderDashboard(data), 600);
+        }
+
+        if (type === 'error') {
+          evtSource.close();
+          showError(data);
+        }
+      };
+
+      evtSource.onerror = () => {
+        evtSource.close();
+        showError('Connection to server lost. Make sure the server is running.');
+      };
+    }
+
+    // ── Show error ───────────────────────────────────────────
+    function showError(msg) {
+      document.getElementById('scanning-screen').style.display = 'none';
+      document.getElementById('error-screen').style.display = 'block';
+      document.getElementById('error-msg').textContent = msg;
+      document.getElementById('btn-rescan').disabled = false;
+    }
+
+    // ── Render the full dashboard ────────────────────────────
+    function renderDashboard(result) {
+      scanResult = result;
+
+      document.getElementById('scanning-screen').style.display = 'none';
+      document.getElementById('dashboard-screen').style.display = 'block';
+      document.getElementById('btn-rescan').disabled = false;
+      document.getElementById('page-title').textContent = `Risk Assessment — ${repoFullName}`;
+      document.getElementById('scan-time').textContent = `Scanned just now · ${result.vulnerabilities?.length || 0} issues found`;
+
+      // Score
+      const score = result.overall_score || 0;
+      const scoreEl = document.getElementById('score-num');
+      const badgeEl = document.getElementById('score-badge');
+      scoreEl.textContent = score;
+
+      // Color score by risk
+      const riskLevel = result.risk_level || 'HIGH';
+      const colorMap = { CRITICAL: '#b91c1c', HIGH: '#dc2626', MEDIUM: '#d97706', LOW: '#16a34a' };
+      const bgMap = { CRITICAL: 'rgba(185,28,28,0.1)', HIGH: 'rgba(220,38,38,0.1)', MEDIUM: 'rgba(217,119,6,0.1)', LOW: 'rgba(22,163,74,0.1)' };
+      scoreEl.style.color = colorMap[riskLevel] || '#dc2626';
+      badgeEl.textContent = riskLevel + ' RISK';
+      badgeEl.style.color = colorMap[riskLevel];
+      badgeEl.style.borderColor = colorMap[riskLevel];
+      badgeEl.style.background = bgMap[riskLevel];
+
+      document.getElementById('score-summary').textContent = result.summary || '';
+
+      // NIST grades
+      const nistGrid = document.getElementById('nist-grid');
+      const nist = result.nist_scores || {};
+      const categories = ['identify', 'protect', 'detect', 'respond', 'recover'];
+      nistGrid.innerHTML = categories.map(cat => {
+        const grade = (nist[cat] || 'C').toUpperCase();
+        const gradeClass = { 'A': 'grade-a', 'B': 'grade-b', 'C': 'grade-c', 'D': 'grade-d', 'F': 'grade-f' }[grade] || 'grade-c';
+        return `
+          <div class="nist-item">
+            <div class="nist-grade ${gradeClass}">${grade}</div>
+            <div class="nist-name">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+          </div>`;
+      }).join('');
+
+      // Vulnerabilities
+      const vulns = result.vulnerabilities || [];
+      const sevOrder = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+      vulns.sort((a, b) => (sevOrder[a.severity] || 99) - (sevOrder[b.severity] || 99));
+
+      const critCount = vulns.filter(v => v.severity === 'CRITICAL').length;
+      document.getElementById('vuln-count').textContent =
+        `${vulns.length} issues${critCount > 0 ? ` · ${critCount} critical` : ''}`;
+
+      document.getElementById('vuln-list').innerHTML = vulns.map((v, i) => {
+        const sev = (v.severity || 'LOW').toUpperCase();
+        const dotClass = { CRITICAL: 'dot-critical', HIGH: 'dot-high', MEDIUM: 'dot-medium', LOW: 'dot-low' }[sev] || 'dot-low';
+        const badgeClass = { CRITICAL: 'sb-critical', HIGH: 'sb-high', MEDIUM: 'sb-medium', LOW: 'sb-low' }[sev] || 'sb-low';
+        return `
+          <div class="vuln-item" onclick="toggleVuln(${i})">
+            <div class="sev-dot ${dotClass}"></div>
+            <div style="flex:1">
+              <div class="vuln-title">${v.title}</div>
+              <div class="vuln-meta">
+                <span class="vuln-file">${v.file || ''}</span>
+                <span>${v.nist_category ? v.nist_category.charAt(0).toUpperCase() + v.nist_category.slice(1) : ''}</span>
+              </div>
+            </div>
+            <span class="sev-badge ${badgeClass}">${sev}</span>
+          </div>
+          <div class="vuln-detail" id="vuln-detail-${i}">
+            <p>${v.description || ''}</p>
+            ${v.fix ? `<div class="fix-box"><strong>How to fix:</strong>${v.fix}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      // Recommendations
+      const recs = result.recommendations || [];
+      document.getElementById('rec-list').innerHTML = recs.map((r, i) => `
+        <div class="rec-item">
+          <div class="rec-num">${r.priority || i + 1}</div>
+          <div>
+            <div class="rec-text">${r.action}</div>
+            <div class="rec-tag">${r.reason || ''}</div>
+          </div>
+        </div>`).join('');
+
+      // Update chat intro
+      const topVuln = vulns[0];
+      document.getElementById('chat-intro').innerHTML =
+        `I've analyzed <strong>${repoFullName}</strong>. ${result.summary || ''} Ask me anything about these findings or how to fix them.`;
+    }
+
+    // ── Toggle vuln detail ───────────────────────────────────
+    function toggleVuln(i) {
+      const el = document.getElementById(`vuln-detail-${i}`);
+      el.classList.toggle('open');
+    }
+
+    // ── Chat ─────────────────────────────────────────────────
+    async function sendChat() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg || !scanResult) return;
+
+      input.value = '';
+      document.getElementById('chat-send').disabled = true;
+
+      // Add user message
+      appendChat('user', msg);
+
+      // Call Claude with scan context
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: msg,
+            repo: repoFullName,
+            context: {
+              summary: scanResult.summary,
+              vulnerabilities: scanResult.vulnerabilities,
+              recommendations: scanResult.recommendations,
+            }
+          })
+        });
+        const data = await res.json();
+        appendChat('ai', data.reply || 'Sorry, could not get a response.');
+      } catch {
+        appendChat('ai', 'Failed to get response. Check that the server is running.');
+      }
+
+      document.getElementById('chat-send').disabled = false;
+    }
+
+    function appendChat(role, text) {
+      const container = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = `chat-msg ${role}`;
+      div.innerHTML = `
+        <div class="chat-who">${role === 'ai' ? 'SecureScan AI' : 'You'}</div>
+        <div class="bubble">${text}</div>`;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Enter key for chat
+    document.getElementById('chat-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendChat();
+    });
+
+    // ── Start on load ────────────────────────────────────────
+    startScan();
+  </script>
 </body>
 </html>
