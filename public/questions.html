@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureScan — Security Questions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --text: #0f172a;
+      --muted: #64748b;
+      --success: #16a34a;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); font-family: 'IBM Plex Sans', sans-serif; color: var(--text); min-height: 100vh; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none;
+    }
+
+    nav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.95rem; text-decoration: none; color: var(--text); }
+    .nav-logo-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .nav-logo-icon svg { width: 14px; height: 14px; }
+    .nav-user { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+
+    main { max-width: 680px; margin: 0 auto; padding: 48px 24px; position: relative; z-index: 1; }
+
+    .header { margin-bottom: 36px; }
+    .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .header-icon { width: 40px; height: 40px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .header h2 { font-family: 'IBM Plex Mono', monospace; font-size: 1.2rem; font-weight: 600; }
+    .header p { color: var(--muted); font-size: 0.875rem; line-height: 1.6; }
+    .repo-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--accent); background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); border-radius: 4px; padding: 3px 8px; display: inline-block; margin-bottom: 12px; }
+
+    /* Progress */
+    .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .step-dots { display: flex; gap: 6px; }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
+    .step-dot.active { background: var(--accent); }
+    .step-dot.done { background: var(--success); }
+    .progress-label { font-size: 0.78rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+
+    /* Question card */
+    .question-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px; margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      display: none;
+    }
+    .question-card.active { display: block; }
+    .q-nist { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--accent); background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.15); border-radius: 4px; padding: 2px 8px; display: inline-block; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .q-number { font-size: 0.78rem; color: var(--muted); margin-bottom: 8px; font-family: 'IBM Plex Mono', monospace; }
+    .q-text { font-size: 1rem; font-weight: 500; line-height: 1.5; margin-bottom: 22px; }
+
+    /* Options */
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer;
+      font-size: 0.875rem; font-family: 'IBM Plex Sans', sans-serif;
+      text-align: left; transition: all 0.15s; color: var(--text);
+    }
+    .option-btn:hover { border-color: var(--accent); background: rgba(37,99,235,0.04); }
+    .option-btn.selected { border-color: var(--accent); background: rgba(37,99,235,0.08); color: var(--accent); font-weight: 500; }
+    .option-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; transition: all 0.15s; }
+    .option-btn.selected .option-dot { border-color: var(--accent); background: var(--accent); }
+
+    /* Nav buttons */
+    .nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+    .btn-back { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 10px 20px; font-size: 0.875rem; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; transition: border-color 0.15s; }
+    .btn-back:hover { border-color: var(--muted); }
+    .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-next { background: var(--accent); border: none; color: white; border-radius: 8px; padding: 10px 24px; font-size: 0.875rem; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; transition: background 0.15s; }
+    .btn-next:hover { background: #1d4ed8; }
+    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Loading */
+    #loading-screen { display: none; text-align: center; padding: 60px 24px; }
+    #loading-screen .spin { font-size: 2rem; animation: spin 1s linear infinite; display: inline-block; margin-bottom: 16px; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    #loading-screen h3 { font-family: 'IBM Plex Mono', monospace; font-size: 1rem; margin-bottom: 8px; }
+    #loading-screen p { color: var(--muted); font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      SecureScan
+    </a>
+    <div class="nav-user">
+      <img class="avatar" id="nav-avatar" src="" alt="avatar"/>
+      <span id="nav-username">...</span>
+    </div>
+  </nav>
+
+  <main>
+    <div class="header">
+      <div id="repo-tag" class="repo-tag">Loading...</div>
+      <div class="header-top">
+        <div class="header-icon">🛡️</div>
+        <h2>Security Questionnaire</h2>
+      </div>
+      <p>Your repository has been scanned. Answer a few quick questions so we can give you a more accurate security assessment. These cover things the code scan can't see.</p>
+    </div>
+
+    <div class="progress-row">
+      <div class="step-dots" id="step-dots"></div>
+      <span class="progress-label" id="progress-label">Question 1 of 6</span>
+    </div>
+
+    <div id="questions-container">
+      <!-- Questions injected by JS -->
+    </div>
+
+    <div id="loading-screen">
+      <div class="spin">⚙️</div>
+      <h3>Generating Your Report</h3>
+      <p>Combining scan results with your answers...</p>
+    </div>
+
+    <div class="nav-buttons" id="nav-buttons">
+      <button class="btn-back" id="btn-back" onclick="prevQuestion()" disabled>← Back</button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()" disabled>Next →</button>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const repoFullName = params.get('repo');
+    const questionsParam = params.get('questions');
+
+    if (!repoFullName) window.location = '/repos.html';
+
+    let questions = [];
+    let answers = [];
+    let currentIndex = 0;
+
+    // Load user
+    fetch('/api/me').then(r => r.json()).then(data => {
+      if (data.user) {
+        document.getElementById('nav-avatar').src = data.user.avatar_url;
+        document.getElementById('nav-username').textContent = data.user.login;
+      }
+    });
+
+    document.getElementById('repo-tag').textContent = repoFullName;
+
+    // Load questions from sessionStorage (passed from dashboard scan)
+    function init() {
+      const stored = sessionStorage.getItem('scan_questions_' + repoFullName);
+      if (stored) {
+        questions = JSON.parse(stored);
+        answers = new Array(questions.length).fill(null);
+        renderAll();
+      } else {
+        // Redirect back if no questions
+        window.location = `/dashboard.html?repo=${encodeURIComponent(repoFullName)}`;
+      }
+    }
+
+    function renderAll() {
+      const container = document.getElementById('questions-container');
+      const dots = document.getElementById('step-dots');
+
+      // Render dots
+      dots.innerHTML = questions.map((_, i) =>
+        `<div class="step-dot" id="dot-${i}"></div>`
+      ).join('');
+
+      // Render question cards
+      container.innerHTML = questions.map((q, i) => `
+        <div class="question-card ${i === 0 ? 'active' : ''}" id="qcard-${i}">
+          <div class="q-nist">NIST · ${q.nist_category}</div>
+          <div class="q-number">Question ${i + 1} of ${questions.length}</div>
+          <div class="q-text">${q.question}</div>
+          <div class="options">
+            ${q.options.map((opt, j) => `
+              <button class="option-btn" onclick="selectAnswer(${i}, '${opt}')" id="opt-${i}-${j}">
+                <div class="option-dot"></div>
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      updateUI();
+    }
+
+    function selectAnswer(qIndex, answer) {
+      answers[qIndex] = answer;
+
+      // Update option button styles
+      const q = questions[qIndex];
+      q.options.forEach((opt, j) => {
+        const btn = document.getElementById(`opt-${qIndex}-${j}`);
+        btn.classList.toggle('selected', opt === answer);
+      });
+
+      // Enable next button
+      document.getElementById('btn-next').disabled = false;
+    }
+
+    function updateUI() {
+      const dots = document.getElementById('step-dots');
+      questions.forEach((_, i) => {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i < currentIndex) dot.className = 'step-dot done';
+        else if (i === currentIndex) dot.className = 'step-dot active';
+        else dot.className = 'step-dot';
+      });
+
+      document.getElementById('progress-label').textContent =
+        `Question ${currentIndex + 1} of ${questions.length}`;
+
+      document.getElementById('btn-back').disabled = currentIndex === 0;
+      document.getElementById('btn-next').disabled = answers[currentIndex] === null;
+
+      const isLast = currentIndex === questions.length - 1;
+      document.getElementById('btn-next').textContent =
+        isLast ? 'Generate Report →' : 'Next →';
+    }
+
+    function nextQuestion() {
+      if (answers[currentIndex] === null) return;
+
+      if (currentIndex === questions.length - 1) {
+        submitAnswers();
+        return;
+      }
+
+      document.getElementById(`qcard-${currentIndex}`).classList.remove('active');
+      currentIndex++;
+      document.getElementById(`qcard-${currentIndex}`).classList.add('active');
+      updateUI();
+    }
+
+    function prevQuestion() {
+      if (currentIndex === 0) return;
+      document.getElementById(`qcard-${currentIndex}`).classList.remove('active');
+      currentIndex--;
+      document.getElementById(`qcard-${currentIndex}`).classList.add('active');
+      updateUI();
+    }
+
+    async function submitAnswers() {
+      // Show loading
+      document.getElementById('questions-container').style.display = 'none';
+      document.getElementById('nav-buttons').style.display = 'none';
+      document.getElementById('loading-screen').style.display = 'block';
+
+      try {
+        const res = await fetch('/api/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repo: repoFullName, answers })
+        });
+
+        if (!res.ok) throw new Error('Failed to generate report');
+
+        const report = await res.json();
+
+        // Store report and go to dashboard
+        sessionStorage.setItem('scan_result_' + repoFullName, JSON.stringify(report));
+        window.location = `/dashboard.html?repo=${encodeURIComponent(repoFullName)}&ready=true`;
+
+      } catch (err) {
+        document.getElementById('loading-screen').innerHTML = `
+          <h3 style="color:var(--danger)">Failed to generate report</h3>
+          <p style="color:var(--muted);margin-top:8px">${err.message}</p>
+          <a href="/repos.html" style="display:inline-block;margin-top:16px;color:var(--accent)">← Back to repos</a>
+        `;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

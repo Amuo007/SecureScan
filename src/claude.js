@@ -1,7 +1,16 @@
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 
 const CLAUDE_API = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-20250514';
+const PROMPTS_DIR = path.join(__dirname, '..', 'prompts');
+
+// ─── Load prompt from .md file ────────────────────────────────
+function loadPrompt(name) {
+  const filePath = path.join(PROMPTS_DIR, `${name}.md`);
+  return fs.readFileSync(filePath, 'utf-8').trim();
+}
 
 // ─── Base Claude call ─────────────────────────────────────────
 async function callClaude(systemPrompt, userMessage, maxTokens = 1000) {
@@ -27,22 +36,7 @@ async function callClaude(systemPrompt, userMessage, maxTokens = 1000) {
 
 // ─── Call 1: Decide which files to analyze ────────────────────
 async function selectFilesToAnalyze(fileTree) {
-  const system = `You are a cybersecurity expert. Your job is to look at a list of file paths in a repository and decide which ones are most relevant for a security analysis.
-
-Focus on files that could contain:
-- Secrets, API keys, passwords, tokens
-- Authentication and authorization logic
-- Configuration and environment settings
-- Dependencies and package files
-- CI/CD pipeline files
-- Database connection strings
-- Network or server configuration
-
-Return ONLY a JSON array of file paths to analyze. No explanation. No markdown. Just the raw JSON array.
-Example: ["config.js", ".env.example", "src/auth.js"]
-
-Skip: test files, documentation, images, fonts, build artifacts, lock files (except package.json/requirements.txt).
-Select a maximum of 15 files.`;
+  const system = loadPrompt('select_files');
 
   const userMessage = `Here is the file tree for this repository:\n\n${fileTree.join('\n')}\n\nWhich files should I analyze for security issues?`;
 
@@ -117,27 +111,7 @@ async function analyzeCommitHistory(commitFindings) {
     };
   }
 
-  const system = `You are a cybersecurity expert. Analyze these suspicious patterns found in a git repository's commit history.
-
-These patterns suggest secrets or credentials may have been committed to the repository at some point — even if later deleted, they are still in git history and potentially compromised.
-
-Return ONLY a JSON object. No markdown. Raw JSON only.
-
-Format:
-{
-  "file": "git_history",
-  "summary": "one sentence summary of findings",
-  "issues": [
-    {
-      "title": "short title",
-      "description": "plain English explanation",
-      "severity": "CRITICAL|HIGH|MEDIUM|LOW",
-      "nist_category": "identify|protect|detect|respond|recover",
-      "fix": "specific fix"
-    }
-  ],
-  "safe_practices": []
-}`;
+  const system = loadPrompt('commit_history');
 
   const userMessage = `Git history analysis findings:\n\n${JSON.stringify(commitFindings, null, 2)}`;
 
@@ -228,4 +202,151 @@ module.exports = {
   analyzeFile,
   analyzeCommitHistory,
   generateMasterReport,
+};
+
+// ─── Call 5: Generate custom questions based on scan findings ─
+async function generateQuestions(repoName, fileSummaries) {
+  const system = loadPrompt('generate_questions');
+
+  const summariesText = fileSummaries
+    .map(s => `FILE: ${s.file} — ${s.summary}`)
+    .join('\n');
+
+  const userMessage = `Repository: ${repoName}\n\nWhat this repo contains:\n${summariesText}\n\nGenerate 6 security questions specific to this type of application.`;
+
+  const response = await callClaude(system, userMessage, 1000);
+
+  try {
+    const clean = response.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch {
+    // fallback generic questions
+    return [
+      { id: 1, question: "Do team members share login credentials for this project?", nist_category: "protect", type: "yesno", options: ["Yes", "No"], risk_if_no: "Shared credentials make it impossible to track who did what." },
+      { id: 2, question: "Do you use two-factor authentication on accounts related to this project?", nist_category: "protect", type: "yesno", options: ["Yes", "No"], risk_if_no: "Without MFA, stolen passwords give full access." },
+      { id: 3, question: "Do you have backups of your data?", nist_category: "recover", type: "yesno", options: ["Yes", "No"], risk_if_no: "No backups means data loss is permanent after an attack." },
+      { id: 4, question: "Has anyone reviewed this codebase for security issues before?", nist_category: "identify", type: "yesno", options: ["Yes", "No"], risk_if_no: "Unreviewed code often contains hidden vulnerabilities." },
+      { id: 5, question: "Do you have a plan for what to do if this app gets hacked?", nist_category: "respond", type: "yesno", options: ["Yes", "No"], risk_if_no: "No incident response plan means slow, chaotic reaction to breaches." },
+      { id: 6, question: "Do you monitor your app for unusual activity or errors?", nist_category: "detect", type: "yesno", options: ["Yes", "No"], risk_if_no: "Without monitoring you won't know you've been attacked." },
+    ];
+  }
+}
+
+// ─── Call 6: Final report combining scan + question answers ───
+async function generateFinalReport(repoName, fileSummaries, questions, answers) {
+  const system = loadPrompt('final_report');
+
+  const summariesText = fileSummaries
+    .map(s => `FILE: ${s.file}\nISSUES: ${JSON.stringify(s.issues)}`)
+    .join('\n---\n');
+
+  const answersText = questions.map((q, i) => (
+    `Q: ${q.question} (NIST: ${q.nist_category})\nA: ${answers[i] || 'Not answered'}\nRisk if bad: ${q.risk_if_no}`
+  )).join('\n\n');
+
+  const userMessage = `Repository: ${repoName}
+
+CODE SCAN FINDINGS:
+${summariesText}
+
+QUESTIONNAIRE ANSWERS:
+${answersText}`;
+
+  const response = await callClaude(system, userMessage, 2000);
+
+  try {
+    const clean = response.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch {
+    return null;
+  }
+}
+
+module.exports = {
+  selectFilesToAnalyze,
+  analyzeFile,
+  analyzeCommitHistory,
+  generateMasterReport,
+  generateQuestions,
+  generateFinalReport,
+};
+
+// ─── Pass 2A: Find related file groups ───────────────────────
+async function findRelatedFiles(fileSummaries) {
+  const system = loadPrompt('related_files');
+
+  const summariesText = fileSummaries
+    .map(s => `FILE: ${s.file}\nSUMMARY: ${s.summary}\nISSUES FOUND: ${s.issues?.length || 0}`)
+    .join('\n---\n');
+
+  const response = await callClaude(system, summariesText, 600);
+
+  try {
+    const clean = response.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch {
+    return { related_groups: [] };
+  }
+}
+
+// ─── Pass 2B: Deep combined analysis of related files ─────────
+async function analyzeRelatedFiles(filePaths, fileContents, existingSummaries) {
+  const system = `You are a cybersecurity expert doing a deep cross-file security analysis.
+You are analyzing multiple files TOGETHER because they interact with each other.
+Look for vulnerabilities that only become visible when you see how these files work together.
+
+Examples of cross-file vulnerabilities:
+- Data from one file passed unsafely into another
+- Authentication checked in one file but bypassed via another
+- Secrets or tokens passed between files
+- Inconsistent validation across files
+- Trust boundaries violated between modules
+
+Return ONLY a JSON object. No markdown. Raw JSON only.
+
+Format:
+{
+  "cross_file_issues": [
+    {
+      "title": "short title",
+      "description": "plain English explanation referencing specific files",
+      "severity": "CRITICAL|HIGH|MEDIUM|LOW",
+      "nist_category": "identify|protect|detect|respond|recover",
+      "files_involved": ["file1.js", "file2.js"],
+      "fix": "specific fix"
+    }
+  ],
+  "interaction_summary": "one sentence about how these files interact"
+}`;
+
+  const existingSummaryText = existingSummaries
+    .filter(s => filePaths.includes(s.file))
+    .map(s => `FILE: ${s.file}\nINDIVIDUAL ISSUES: ${JSON.stringify(s.issues)}`)
+    .join('\n---\n');
+
+  const fileContentText = filePaths
+    .map(f => `=== ${f} ===\n${fileContents[f] || '(content not available)'}`)
+    .join('\n\n');
+
+  const userMessage = `Individual analysis summaries:\n${existingSummaryText}\n\nActual file contents:\n${fileContentText}`;
+
+  const response = await callClaude(system, userMessage, 1200);
+
+  try {
+    const clean = response.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch {
+    return { cross_file_issues: [], interaction_summary: '' };
+  }
+}
+
+module.exports = {
+  selectFilesToAnalyze,
+  analyzeFile,
+  analyzeCommitHistory,
+  generateMasterReport,
+  generateQuestions,
+  generateFinalReport,
+  findRelatedFiles,
+  analyzeRelatedFiles,
 };

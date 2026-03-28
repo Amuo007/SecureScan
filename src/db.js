@@ -46,6 +46,10 @@ function createTables() {
       scanned_at       TEXT NOT NULL,
       result           TEXT,
       file_summaries   TEXT,
+      questions        TEXT,
+      pending_questions INTEGER DEFAULT 0,
+      file_tree        TEXT,
+      master_data      TEXT,
       UNIQUE(github_login, repo_full_name)
     )
   `);
@@ -67,28 +71,40 @@ async function getScan(githubLogin, repoFullName) {
     ...result,
     result: result.result ? JSON.parse(result.result) : null,
     file_summaries: result.file_summaries ? JSON.parse(result.file_summaries) : null,
+    questions: result.questions || null,
+    pendingQuestions: result.pending_questions === 1,
+    file_tree: result.file_tree || null,
+    master_data: result.master_data || null,
   };
 }
 
 // ─── Save or update a scan ────────────────────────────────────
-async function saveScan({ githubLogin, repoFullName, lastCommitSha, result, fileSummaries }) {
+async function saveScan({ githubLogin, repoFullName, lastCommitSha, result, fileSummaries, fileTree, masterData, questions, pendingQuestions }) {
   const db = await getDb();
 
   db.run(`
-    INSERT INTO scans (github_login, repo_full_name, last_commit_sha, scanned_at, result, file_summaries)
-    VALUES (:login, :repo, :sha, :scanned_at, :result, :summaries)
+    INSERT INTO scans (github_login, repo_full_name, last_commit_sha, scanned_at, result, file_summaries, questions, pending_questions, file_tree, master_data)
+    VALUES (:login, :repo, :sha, :scanned_at, :result, :summaries, :questions, :pending, :file_tree, :master_data)
     ON CONFLICT(github_login, repo_full_name) DO UPDATE SET
-      last_commit_sha = excluded.last_commit_sha,
-      scanned_at      = excluded.scanned_at,
-      result          = excluded.result,
-      file_summaries  = excluded.file_summaries
+      last_commit_sha   = excluded.last_commit_sha,
+      scanned_at        = excluded.scanned_at,
+      result            = excluded.result,
+      file_summaries    = excluded.file_summaries,
+      questions         = excluded.questions,
+      pending_questions = excluded.pending_questions,
+      file_tree         = excluded.file_tree,
+      master_data       = excluded.master_data
   `, {
     ':login':      githubLogin,
     ':repo':       repoFullName,
     ':sha':        lastCommitSha,
     ':scanned_at': new Date().toISOString(),
-    ':result':     JSON.stringify(result),
+    ':result':     result ? JSON.stringify(result) : null,
     ':summaries':  JSON.stringify(fileSummaries),
+    ':questions':  questions ? JSON.stringify(questions) : null,
+    ':pending':    pendingQuestions ? 1 : 0,
+    ':file_tree':  fileTree ? JSON.stringify(fileTree) : null,
+    ':master_data': masterData ? JSON.stringify(masterData) : null,
   });
 
   saveDb();

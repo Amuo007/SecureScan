@@ -1,9 +1,12 @@
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
+const PROMPTS_DIR = path.join(__dirname, 'prompts');
+function loadPrompt(name) { return fs.readFileSync(path.join(PROMPTS_DIR, `${name}.md`), 'utf-8').trim(); }
 const express = require('express');
 const axios = require('axios');
 const session = require('express-session');
-const path = require('path');
-const { scanRepo } = require('./src/scanner');
+const { scanRepo, generateFinalReport } = require('./src/scanner');
 const db = require('./src/db');
 
 const app = express();
@@ -121,6 +124,22 @@ app.get('/api/scan/stream/:owner/:repo', requireAuth, async (req, res) => {
   }
 });
 
+// Submit questionnaire answers → generate final report
+app.post('/api/report', requireAuth, async (req, res) => {
+  const { repo, answers } = req.body;
+  try {
+    const report = await generateFinalReport({
+      githubLogin: req.session.user.login,
+      repoFullName: repo,
+      answers,
+    });
+    res.json(report);
+  } catch (err) {
+    console.error('Report error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/auth/logout', (req, res) => { req.session.destroy(); res.redirect('/'); });
 
 app.listen(PORT, () => console.log(`✅ SecureScan running at http://localhost:${PORT}`));
@@ -129,18 +148,48 @@ app.listen(PORT, () => console.log(`✅ SecureScan running at http://localhost:$
 app.post('/api/chat', requireAuth, async (req, res) => {
   const { message, repo, context } = req.body;
   try {
+    // Load master data from DB — has everything
+    const scan = await db.getScan(req.session.user.login, repo);
+    const masterData = scan?.master_data ? JSON.parse(scan.master_data) : null;
+
+    // Build rich context for Claude
+    let richContext = '';
+
+    if (masterData) {
+      // File tree
+      const fileTree = masterData.file_tree || [];
+      richContext += `\n\nFULL FILE TREE:\n${fileTree.join('\n')}`;
+
+      // Per file rich data — functions, imports, endpoints, queries
+      const filesMap = masterData.files || {};
+      const fileDetails = Object.entries(filesMap).map(([fname, fdata]) => {
+        let detail = `\nFILE: ${fname}`;
+        detail += `\n  Summary: ${fdata.summary || ''}`;
+        if (fdata.language) detail += `\n  Language: ${fdata.language}`;
+        if (fdata.imports?.length) detail += `\n  Imports: ${fdata.imports.join(', ')}`;
+        if (fdata.exports?.length) detail += `\n  Exports: ${fdata.exports.join(', ')}`;
+        if (fdata.functions?.length) detail += `\n  Functions: ${fdata.functions.map(f => f.name + '() — ' + f.description).join(', ')}`;
+        if (fdata.api_endpoints?.length) detail += `\n  API Endpoints: ${fdata.api_endpoints.join(', ')}`;
+        if (fdata.env_vars_used?.length) detail += `\n  Env vars: ${fdata.env_vars_used.join(', ')}`;
+        if (fdata.db_queries?.length) detail += `\n  DB Queries: ${fdata.db_queries.join(' | ')}`;
+        if (fdata.raw_content) detail += `\n  Raw Content:\n\`\`\`\n${fdata.raw_content.slice(0, 2000)}\n\`\`\``;
+        return detail;
+      }).join('\n---');
+
+      richContext += `\n\nDETAILED FILE ANALYSIS:\n${fileDetails}`;
+
+      // Cross file map
+      if (masterData.cross_file_map && Object.keys(masterData.cross_file_map).length) {
+        richContext += `\n\nCROSS-FILE DEPENDENCIES:\n${JSON.stringify(masterData.cross_file_map, null, 2)}`;
+      }
+    }
+
     const response = await axios.post(
       'https://api.anthropic.com/v1/messages',
       {
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        system: `You are a cybersecurity expert assistant. The user is asking about the security scan results for the repository "${repo}".
-Here is the scan context:
-Summary: ${context.summary}
-Vulnerabilities found: ${JSON.stringify(context.vulnerabilities)}
-Top recommendations: ${JSON.stringify(context.recommendations)}
-
-Answer in plain English, no jargon. Be specific and reference actual findings from the scan. Keep answers concise.`,
+        max_tokens: 1000,
+        system: loadPrompt('chat_system') + `\n\nREPO: ${repo}\nSCAN SUMMARY: ${context.summary}\nVULNERABILITIES: ${JSON.stringify(context.vulnerabilities)}\nRECOMMENDATIONS: ${JSON.stringify(context.recommendations)}\n${richContext}`,
         messages: [{ role: 'user', content: message }]
       },
       {
