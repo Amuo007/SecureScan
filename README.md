@@ -18,9 +18,13 @@ SecureScan performs a deep security audit of any GitHub repo you own:
 
 ---
 
-## Screenshots
+## Diagrams
 
-> _Add screenshots here_
+### Agent Flow
+![Agent Flow](https://raw.githubusercontent.com/Amuo007/SecureScan/main/Agentflow.png)
+
+### System Architecture
+![Architecture](https://raw.githubusercontent.com/Amuo007/SecureScan/main/Architecture.png)
 
 ---
 
