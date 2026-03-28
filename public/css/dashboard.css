@@ -48,6 +48,16 @@ main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 .nist-bar-fill { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
 .nist-pct { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-bottom: 8px; }
 .nist-desc-text { font-size: 0.65rem; color: var(--muted); line-height: 1.4; text-align: center; }
+.nist-item { cursor: pointer; transition: border-color 0.15s; }
+.nist-item:hover { border-color: var(--accent); }
+.nist-item.active { border-color: var(--accent); background: var(--surface); }
+.nist-reason-box {
+  display: none; margin-top: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+  font-size: 0.82rem; color: var(--text); line-height: 1.6;
+}
+.nist-reason-box.open { display: block; }
 .grade-f { color: var(--critical); } .grade-d { color: #ea580c; } .grade-c { color: var(--warning); } .grade-b { color: #65a30d; } .grade-a { color: var(--success); }
 .bar-f { background: var(--critical); } .bar-d { background: #ea580c; } .bar-c { background: var(--warning); } .bar-b { background: #65a30d; } .bar-a { background: var(--success); }
 

@@ -22,6 +22,13 @@ Format:
     "respond": "<letter grade A through F>",
     "recover": "<letter grade A through F>"
   },
+  "nist_reasons": {
+    "identify": "1-2 plain English sentences explaining why this grade was given. No jargon. Write for a non-technical person.",
+    "protect": "1-2 plain English sentences explaining why this grade was given. No jargon. Write for a non-technical person.",
+    "detect": "1-2 plain English sentences explaining why this grade was given. No jargon. Write for a non-technical person.",
+    "respond": "1-2 plain English sentences explaining why this grade was given. No jargon. Write for a non-technical person.",
+    "recover": "1-2 plain English sentences explaining why this grade was given. No jargon. Write for a non-technical person."
+  },
   "vulnerabilities": [
     {
       "title": "short title",

@@ -243,7 +243,7 @@ ${summariesText}
 QUESTIONNAIRE ANSWERS:
 ${answersText}`;
 
-  const response = await callClaude(system, userMessage, 2000);
+  const response = await callClaude(system, userMessage, 2500);
 
   try {
     const clean = response.replace(/```json|```/g, '').trim();

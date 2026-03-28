@@ -5,6 +5,7 @@ if (!repoFullName) window.location = '/repos.html';
 const [owner, repo] = repoFullName.split('/');
 let scanResult = null;
 let scanProgress = 0;
+let nistReasons = {};
 
 document.getElementById('nav-repo').textContent = repoFullName;
 document.getElementById('page-title').textContent = `Scanning ${repoFullName}...`;
@@ -134,6 +135,7 @@ function renderDashboard(result) {
 
   const nistGrid = document.getElementById('nist-grid');
   const nist = result.nist_scores || {};
+  nistReasons = result.nist_reasons || {};
   const categories = ['identify', 'protect', 'detect', 'respond', 'recover'];
 
   nistGrid.innerHTML = categories.map(cat => {
@@ -143,7 +145,7 @@ function renderDashboard(result) {
     const pct  = gradeToPercent[grade] || 50;
     const meta = nistMeta[cat];
     return `
-      <div class="nist-item">
+      <div class="nist-item" onclick="toggleNistReason('${cat}')">
         <div class="nist-letter ${gradeClass}">${safeText(grade)}</div>
         <div class="nist-abbr">${safeText(meta.abbr)}</div>
         <div class="nist-bar-wrap"><div class="nist-bar-fill ${barClass}" style="width:${pct}%"></div></div>
@@ -202,6 +204,28 @@ function renderDashboard(result) {
 function toggleVuln(i) {
   const el = document.getElementById(`vuln-detail-${i}`);
   if (el) el.classList.toggle('open');
+}
+
+let activeNistCat = null;
+
+function toggleNistReason(cat) {
+  const box = document.getElementById('nist-reason-box');
+  const prevActive = document.querySelector('.nist-item.active');
+  if (prevActive) prevActive.classList.remove('active');
+
+  if (activeNistCat === cat) {
+    box.classList.remove('open');
+    activeNistCat = null;
+    return;
+  }
+
+  const reason = nistReasons[cat];
+  if (!reason) return;
+
+  box.textContent = reason;
+  box.classList.add('open');
+  document.querySelector(`[onclick="toggleNistReason('${cat}')"]`).classList.add('active');
+  activeNistCat = cat;
 }
 
 async function sendChat() {
