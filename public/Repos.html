@@ -220,11 +220,20 @@
                 </div>
                 <div class="repo-desc">${repo.description || '<span style="color:#94a3b8;font-style:italic;">No description</span>'}</div>
               </div>
-              <span class="badge-scan badge-new">NOT SCANNED</span>
+              ${repo.last_scan
+                ? `<span class="badge-scan ${
+                    repo.last_scan.risk_level === 'CRITICAL' ? 'badge-high' :
+                    repo.last_scan.risk_level === 'HIGH' ? 'badge-high' :
+                    repo.last_scan.risk_level === 'MEDIUM' ? 'badge-med' :
+                    repo.last_scan.risk_level === 'LOW' ? 'badge-low' : 'badge-new'
+                  }">${repo.last_scan.risk_level || 'SCANNED'}</span>`
+                : '<span class="badge-scan badge-new">NOT SCANNED</span>'
+              }
             </div>
             <div class="repo-meta">
               ${repo.language ? `<span><span class="lang-dot" style="background:${LANG_COLORS[repo.language] || '#94a3b8'}"></span>${repo.language}</span>` : ''}
               <span>${timeAgo(repo.updated_at)}</span>
+              ${repo.last_scan ? `<span style="color:var(--accent)">Last scanned: ${new Date(repo.last_scan.scanned_at).toLocaleDateString()}</span>` : ''}
             </div>
           </a>
         `).join('')}
