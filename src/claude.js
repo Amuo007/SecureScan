@@ -46,7 +46,6 @@ async function selectFilesToAnalyze(fileTree) {
     const clean = response.replace(/```json|```/g, '').trim();
     return JSON.parse(clean);
   } catch {
-    // fallback — pick common security-relevant files manually
     return fileTree.filter(f =>
       /\.(env|config|json|yaml|yml|js|ts|py|rb|php|sh)$/i.test(f) ||
       /(auth|secret|key|password|token|config|login|security)/i.test(f)
@@ -197,13 +196,6 @@ Be specific — reference actual file names and issues found.`;
   }
 }
 
-module.exports = {
-  selectFilesToAnalyze,
-  analyzeFile,
-  analyzeCommitHistory,
-  generateMasterReport,
-};
-
 // ─── Call 5: Generate custom questions based on scan findings ─
 async function generateQuestions(repoName, fileSummaries) {
   const system = loadPrompt('generate_questions');
@@ -220,7 +212,6 @@ async function generateQuestions(repoName, fileSummaries) {
     const clean = response.replace(/```json|```/g, '').trim();
     return JSON.parse(clean);
   } catch {
-    // fallback generic questions
     return [
       { id: 1, question: "Do team members share login credentials for this project?", nist_category: "protect", type: "yesno", options: ["Yes", "No"], risk_if_no: "Shared credentials make it impossible to track who did what." },
       { id: 2, question: "Do you use two-factor authentication on accounts related to this project?", nist_category: "protect", type: "yesno", options: ["Yes", "No"], risk_if_no: "Without MFA, stolen passwords give full access." },
@@ -269,84 +260,4 @@ module.exports = {
   generateMasterReport,
   generateQuestions,
   generateFinalReport,
-};
-
-// ─── Pass 2A: Find related file groups ───────────────────────
-async function findRelatedFiles(fileSummaries) {
-  const system = loadPrompt('related_files');
-
-  const summariesText = fileSummaries
-    .map(s => `FILE: ${s.file}\nSUMMARY: ${s.summary}\nISSUES FOUND: ${s.issues?.length || 0}`)
-    .join('\n---\n');
-
-  const response = await callClaude(system, summariesText, 600);
-
-  try {
-    const clean = response.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
-  } catch {
-    return { related_groups: [] };
-  }
-}
-
-// ─── Pass 2B: Deep combined analysis of related files ─────────
-async function analyzeRelatedFiles(filePaths, fileContents, existingSummaries) {
-  const system = `You are a cybersecurity expert doing a deep cross-file security analysis.
-You are analyzing multiple files TOGETHER because they interact with each other.
-Look for vulnerabilities that only become visible when you see how these files work together.
-
-Examples of cross-file vulnerabilities:
-- Data from one file passed unsafely into another
-- Authentication checked in one file but bypassed via another
-- Secrets or tokens passed between files
-- Inconsistent validation across files
-- Trust boundaries violated between modules
-
-Return ONLY a JSON object. No markdown. Raw JSON only.
-
-Format:
-{
-  "cross_file_issues": [
-    {
-      "title": "short title",
-      "description": "plain English explanation referencing specific files",
-      "severity": "CRITICAL|HIGH|MEDIUM|LOW",
-      "nist_category": "identify|protect|detect|respond|recover",
-      "files_involved": ["file1.js", "file2.js"],
-      "fix": "specific fix"
-    }
-  ],
-  "interaction_summary": "one sentence about how these files interact"
-}`;
-
-  const existingSummaryText = existingSummaries
-    .filter(s => filePaths.includes(s.file))
-    .map(s => `FILE: ${s.file}\nINDIVIDUAL ISSUES: ${JSON.stringify(s.issues)}`)
-    .join('\n---\n');
-
-  const fileContentText = filePaths
-    .map(f => `=== ${f} ===\n${fileContents[f] || '(content not available)'}`)
-    .join('\n\n');
-
-  const userMessage = `Individual analysis summaries:\n${existingSummaryText}\n\nActual file contents:\n${fileContentText}`;
-
-  const response = await callClaude(system, userMessage, 1200);
-
-  try {
-    const clean = response.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
-  } catch {
-    return { cross_file_issues: [], interaction_summary: '' };
-  }
-}
-
-module.exports = {
-  selectFilesToAnalyze,
-  analyzeFile,
-  analyzeCommitHistory,
-  generateMasterReport,
-  generateQuestions,
-  generateFinalReport,
-  findRelatedFiles,
-  analyzeRelatedFiles,
 };
