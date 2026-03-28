@@ -1,0 +1,14 @@
+body { display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 48px 40px; width: 100%; max-width: 420px; position: relative; z-index: 1; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+.logo-mark { width: 44px; height: 44px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+.logo-mark svg { width: 22px; height: 22px; }
+h1 { font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+.subtitle { color: var(--muted); font-size: 0.875rem; margin-bottom: 36px; line-height: 1.6; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.github-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px 20px; background: #0f172a; color: #fff; border: none; border-radius: 8px; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.15s, transform 0.1s; }
+.github-btn:hover { background: #1e293b; color: #fff; transform: translateY(-1px); }
+.github-btn svg { flex-shrink: 0; }
+.tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px; }
+.tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; }
+.footer-note { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 24px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); display: inline-block; margin-right: 6px; }
