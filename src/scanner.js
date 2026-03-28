@@ -8,16 +8,17 @@ function calculateScore(rawCounts, questions, answers) {
   const categories = ['identify', 'protect', 'detect', 'respond', 'recover'];
 
   const categoryScores = {};
-  let totalRaw = 0;
 
+  // Base score from raw findings
   for (const cat of categories) {
     const counts = rawCounts[cat] || {};
     let raw = 0;
+
     for (const [sev, pts] of Object.entries(weights)) {
       raw += (counts[sev] || 0) * pts;
     }
+
     categoryScores[cat] = raw;
-    totalRaw += raw;
   }
 
   // Add question penalties for bad answers
@@ -25,25 +26,36 @@ function calculateScore(rawCounts, questions, answers) {
     questions.forEach((q, i) => {
       const answer = answers[i];
       if (!answer) return;
-      const isBadAnswer = answer === 'No' || answer === q.options[q.options.length - 1];
+
+      const isBadAnswer =
+        answer === 'No' || answer === q.options[q.options.length - 1];
+
       if (isBadAnswer) {
         const riskText = (q.risk_if_bad || '').toLowerCase();
-        const isHighRisk = riskText.includes('data loss') ||
+        const isHighRisk =
+          riskText.includes('data loss') ||
           riskText.includes('unauthorized') ||
           riskText.includes('no plan') ||
           riskText.includes('permanent');
+
         const penalty = isHighRisk ? 10 : 5;
-        categoryScores[q.nist_category] = (categoryScores[q.nist_category] || 0) + penalty;
-        totalRaw += penalty;
+        categoryScores[q.nist_category] =
+          (categoryScores[q.nist_category] || 0) + penalty;
       }
     });
   }
 
+  // Cap each category at 100
   for (const cat of categories) {
     categoryScores[cat] = Math.min(categoryScores[cat] || 0, 100);
   }
 
-  const overallScore = Math.min(totalRaw, 100);
+  // Overall score = average of the 5 category scores
+  const overallScore = Math.round(
+    categories.reduce((sum, cat) => sum + categoryScores[cat], 0) /
+      categories.length
+  );
+
   const riskLevel =
     overallScore <= 25 ? 'LOW' :
     overallScore <= 50 ? 'MEDIUM' :
