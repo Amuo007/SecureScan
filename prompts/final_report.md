@@ -11,8 +11,10 @@ Return ONLY a JSON object. No markdown. Raw JSON only.
 
 Format:
 {
-  "overall_score": <number 0-100, where 100 is perfectly secure, 0 is critically vulnerable>,
+  "overall_score": <number 0-100, where 0 is perfectly secure, 100 is critically vulnerable>,
   "risk_level": "CRITICAL|HIGH|MEDIUM|LOW",
+  "app_description": "1-2 sentences describing what this application does and its purpose — based on the code and files analyzed. No security info here, just what the app is.",
+  "summary": "2-3 sentences about the security posture only — what vulnerabilities exist, what the risks are, what needs fixing. No description of what the app does here.",
   "nist_scores": {
     "identify": "<letter grade A through F>",
     "protect": "<letter grade A through F>",
@@ -37,8 +39,7 @@ Format:
       "reason": "why this matters in plain English",
       "nist_category": "category"
     }
-  ],
-  "summary": "2-3 sentence plain English overview of the overall security posture — no jargon"
+  ]
 }
 
 Rules:
@@ -46,4 +47,8 @@ Rules:
 - Include top 4 recommendations only, sorted by priority
 - Be specific — reference actual file names and issues found
 - Write for a non-technical audience — no jargon
-- Scoring guide: CRITICAL issues = -20pts each, HIGH = -10pts, MEDIUM = -5pts, LOW = -2pts
+- app_description must describe the app NOT the security issues
+- summary must describe security issues NOT what the app does
+- Scoring guide: CRITICAL issues = +20pts each, HIGH = +10pts, MEDIUM = +5pts, LOW = +2pts
+- Score must reflect danger level: 0 = no issues found, 100 = severely compromised
+- risk_level must match the score: 0-25 = LOW, 26-50 = MEDIUM, 51-75 = HIGH, 76-100 = CRITICAL

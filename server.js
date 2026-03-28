@@ -159,9 +159,15 @@ app.post('/api/chat', requireAuth, async (req, res) => {
       // File tree
       const fileTree = masterData.file_tree || [];
       richContext += `\n\nFULL FILE TREE:\n${fileTree.join('\n')}`;
-
-      // Per file rich data — functions, imports, endpoints, queries
+    
       const filesMap = masterData.files || {};
+    
+      // find which files the user is actually asking about
+      const mentionedFiles = Object.keys(filesMap).filter(fname =>
+        message.toLowerCase().includes(fname.toLowerCase())
+      );
+    
+      // only load raw content for mentioned files
       const fileDetails = Object.entries(filesMap).map(([fname, fdata]) => {
         let detail = `\nFILE: ${fname}`;
         detail += `\n  Summary: ${fdata.summary || ''}`;
@@ -172,17 +178,14 @@ app.post('/api/chat', requireAuth, async (req, res) => {
         if (fdata.api_endpoints?.length) detail += `\n  API Endpoints: ${fdata.api_endpoints.join(', ')}`;
         if (fdata.env_vars_used?.length) detail += `\n  Env vars: ${fdata.env_vars_used.join(', ')}`;
         if (fdata.db_queries?.length) detail += `\n  DB Queries: ${fdata.db_queries.join(' | ')}`;
-        if (fdata.raw_content) detail += `\n  Raw Content:\n\`\`\`\n${fdata.raw_content.slice(0, 2000)}\n\`\`\``;
+        // only include raw code if user specifically asked about this file
+        if (mentionedFiles.includes(fname) && fdata.raw_content) {
+          detail += `\n  Raw Content:\n\`\`\`\n${fdata.raw_content}\n\`\`\``;
+        }
         return detail;
       }).join('\n---');
-
-      richContext += `\n\nDETAILED FILE ANALYSIS:\n${fileDetails}`;
-
-      // Cross file map
-      if (masterData.cross_file_map && Object.keys(masterData.cross_file_map).length) {
-        richContext += `\n\nCROSS-FILE DEPENDENCIES:\n${JSON.stringify(masterData.cross_file_map, null, 2)}`;
-      }
-    }
+    
+      richContext += `\n\nDETAILED FILE ANALYSIS:\n${fileDetails}`;}
 
     const response = await axios.post(
       'https://api.anthropic.com/v1/messages',

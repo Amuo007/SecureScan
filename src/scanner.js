@@ -47,6 +47,7 @@ async function scanRepo({ token, githubLogin, owner, repo, emit }) {
     for (const filePath of Object.keys(fileContents)) {
       emit('status', `Analyzing ${filePath}...`);
       const analysis = await claude.analyzeFile(filePath, fileContents[filePath]);
+      analysis.raw_content = fileContents[filePath];
       fileSummaries.push(analysis);
     }
 

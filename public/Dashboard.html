@@ -8,7 +8,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-  <!-- Markdown parser + sanitizer -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 
@@ -62,250 +61,159 @@
     }
 
     .nav-logo-icon {
-      width: 28px;
-      height: 28px;
+      width: 28px; height: 28px;
       background: var(--accent);
       border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .nav-logo-icon svg {
-      width: 14px;
-      height: 14px;
-    }
+    .nav-logo-icon svg { width: 14px; height: 14px; }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
 
     .nav-repo {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--muted);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 10px;
+      font-size: 0.8rem; color: var(--muted);
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 4px 10px;
     }
 
-    .nav-user {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
+    .nav-user { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
 
     .avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--border);
+      width: 30px; height: 30px; border-radius: 50%;
+      object-fit: cover; border: 2px solid var(--border);
     }
 
     .btn-rescan {
-      background: transparent;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      border-radius: 6px;
-      padding: 5px 14px;
-      font-size: 0.8rem;
-      font-family: 'IBM Plex Sans', sans-serif;
-      cursor: pointer;
-      transition: background 0.15s;
+      background: transparent; border: 1px solid var(--accent);
+      color: var(--accent); border-radius: 6px; padding: 5px 14px;
+      font-size: 0.8rem; font-family: 'IBM Plex Sans', sans-serif;
+      cursor: pointer; transition: background 0.15s;
     }
+    .btn-rescan:hover { background: rgba(37,99,235,0.08); }
+    .btn-rescan:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .btn-rescan:hover {
-      background: rgba(37,99,235,0.08);
-    }
-
-    .btn-rescan:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 32px 24px;
-    }
+    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 
     .repo-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      gap: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
     }
 
     .repo-heading h2 {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.1rem; font-weight: 600;
     }
 
-    .scan-time {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
+    .scan-time { font-size: 0.78rem; color: var(--muted); }
 
     #scanning-screen {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 48px 40px;
-      text-align: center;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 48px 40px; text-align: center;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
-    .scan-icon {
-      font-size: 2.5rem;
-      margin-bottom: 16px;
-      animation: pulse 1.5s infinite;
-    }
+    .scan-icon { font-size: 2.5rem; margin-bottom: 16px; animation: pulse 1.5s infinite; }
 
-    @keyframes pulse {
-      0%,100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-    #scanning-screen h3 {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-    }
+    #scanning-screen h3 { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; margin-bottom: 8px; }
 
-    #scan-status {
-      color: var(--muted);
-      font-size: 0.875rem;
-      margin-bottom: 24px;
-      min-height: 20px;
-    }
+    #scan-status { color: var(--muted); font-size: 0.875rem; margin-bottom: 24px; min-height: 20px; }
 
     .progress-bar-wrap {
-      background: var(--bg);
-      border-radius: 999px;
-      height: 6px;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto 24px;
-      overflow: hidden;
+      background: var(--bg); border-radius: 999px; height: 6px;
+      width: 100%; max-width: 400px; margin: 0 auto 24px; overflow: hidden;
     }
 
     .progress-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 999px;
-      transition: width 0.4s ease;
-      width: 5%;
+      height: 100%; background: var(--accent); border-radius: 999px;
+      transition: width 0.4s ease; width: 5%;
     }
 
     #scan-log {
-      text-align: left;
-      background: #0f172a;
-      border-radius: 8px;
-      padding: 16px;
-      max-height: 180px;
-      overflow-y: auto;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      max-width: 600px;
-      margin: 0 auto;
+      text-align: left; background: #0f172a; border-radius: 8px; padding: 16px;
+      max-height: 180px; overflow-y: auto; font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem; color: #94a3b8; max-width: 600px; margin: 0 auto;
     }
 
-    #scan-log .log-line {
-      margin-bottom: 4px;
-    }
-
-    #scan-log .log-line::before {
-      content: '> ';
-      color: #2563eb;
-    }
+    #scan-log .log-line { margin-bottom: 4px; }
+    #scan-log .log-line::before { content: '> '; color: #2563eb; }
 
     #dashboard-screen { display: none; }
 
     .top-row {
       display: grid;
-      grid-template-columns: 220px 1fr;
+      grid-template-columns: 260px 1fr;
       gap: 16px;
       margin-bottom: 16px;
     }
 
+    /* ── Score card ── */
     .score-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 28px 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .score-top {
+      padding: 24px 20px 20px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      border-bottom: 1px solid var(--border);
     }
 
     .score-label {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace;
     }
 
     .score-num {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 4rem;
-      font-weight: 600;
-      line-height: 1;
-      margin-bottom: 8px;
+      font-size: 4rem; font-weight: 600; line-height: 1; margin-bottom: 8px;
     }
 
     .score-badge {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 4px 12px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-      border: 1px solid;
+      font-size: 0.75rem; font-weight: 600; padding: 4px 12px;
+      border-radius: 20px; letter-spacing: 0.05em; border: 1px solid;
     }
 
-    .score-sub {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 10px;
+    .score-sub { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+
+    .score-about { padding: 14px 16px; flex: 1; }
+
+    .score-about-label {
+      font-size: 0.68rem; font-family: 'IBM Plex Mono', monospace;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
     }
 
-    .score-summary {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 12px;
-      line-height: 1.5;
-      text-align: center;
+    .score-about-text { font-size: 0.78rem; color: var(--text); line-height: 1.55; }
+
+    .score-vulns {
+      padding: 12px 16px 16px; border-top: 1px solid var(--border); background: var(--surface2);
     }
 
+    .score-vulns-label {
+      font-size: 0.68rem; font-family: 'IBM Plex Mono', monospace;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+    }
+
+    .score-vulns-text { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+
+    /* ── NIST card ── */
     .nist-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px 22px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px 22px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .nist-title {
-      font-size: 0.72rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 16px;
-      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace;
     }
 
     .nist-grid {
@@ -315,121 +223,99 @@
     }
 
     .nist-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 10px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 10px 12px; text-align: center;
+    }
+
+    /* Big grade letter */
+    .nist-letter {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.6rem; font-weight: 600; line-height: 1; margin-bottom: 2px;
+    }
+
+    /* Single capital letter abbreviation e.g. I, P, D, R, R */
+    .nist-abbr {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--muted); margin-bottom: 10px;
+    }
+
+    /* percentage bar */
+    .nist-bar-wrap {
+      background: var(--border); border-radius: 999px;
+      height: 4px; width: 100%; margin-bottom: 5px; overflow: hidden;
+    }
+
+    .nist-bar-fill { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+
+    .nist-pct {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; color: var(--muted); margin-bottom: 8px;
+    }
+
+    /* description line under percentage */
+    .nist-desc-text {
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.4;
       text-align: center;
     }
 
-    .nist-grade {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.8rem;
-      font-weight: 600;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .nist-name {
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
+    /* grade colors */
     .grade-f { color: var(--critical); }
     .grade-d { color: #ea580c; }
     .grade-c { color: var(--warning); }
     .grade-b { color: #65a30d; }
     .grade-a { color: var(--success); }
 
+    .bar-f { background: var(--critical); }
+    .bar-d { background: #ea580c; }
+    .bar-c { background: var(--warning); }
+    .bar-b { background: #65a30d; }
+    .bar-a { background: var(--success); }
+
+    /* ── Bottom row ── */
     .bottom-row {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 16px;
-      margin-top: 16px;
+      display: grid; grid-template-columns: 1fr 340px;
+      gap: 16px; margin-top: 16px;
     }
 
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .card-header {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
     }
 
-    .card-title {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .card-count {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+    .card-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; font-weight: 600; }
+    .card-count { font-size: 0.75rem; color: var(--muted); }
 
     .vuln-item {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      cursor: pointer;
-      transition: background 0.1s;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 12px;
+      cursor: pointer; transition: background 0.1s;
     }
 
     .vuln-item:last-child { border-bottom: none; }
+    .vuln-item:hover { background: var(--surface2); }
 
-    .vuln-item:hover {
-      background: var(--surface2);
-    }
-
-    .sev-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 5px;
-    }
-
+    .sev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
     .dot-critical { background: var(--critical); }
     .dot-high { background: var(--danger); }
     .dot-medium { background: var(--warning); }
     .dot-low { background: var(--success); }
 
-    .vuln-title {
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 3px;
-    }
-
-    .vuln-meta {
-      font-size: 0.75rem;
-      color: var(--muted);
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .vuln-file {
-      font-family: 'IBM Plex Mono', monospace;
-    }
+    .vuln-title { font-size: 0.85rem; font-weight: 500; margin-bottom: 3px; }
+    .vuln-meta { font-size: 0.75rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+    .vuln-file { font-family: 'IBM Plex Mono', monospace; }
 
     .sev-badge {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.65rem;
-      padding: 2px 7px;
-      border-radius: 3px;
-      font-weight: 600;
-      margin-left: auto;
-      flex-shrink: 0;
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+      padding: 2px 7px; border-radius: 3px; font-weight: 600;
+      margin-left: auto; flex-shrink: 0;
     }
 
     .sb-critical { background: rgba(185,28,28,0.1); color: var(--critical); }
@@ -438,301 +324,122 @@
     .sb-low { background: rgba(22,163,74,0.1); color: var(--success); }
 
     .vuln-detail {
-      display: none;
-      padding: 12px 20px 16px 40px;
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      font-size: 0.82rem;
-      line-height: 1.6;
+      display: none; padding: 12px 20px 16px 40px;
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+      font-size: 0.82rem; line-height: 1.6;
     }
 
     .vuln-detail.open { display: block; }
 
     .fix-box {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 6px;
-      padding: 10px 14px;
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: #166534;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px;
+      padding: 10px 14px; margin-top: 8px; font-size: 0.8rem; color: #166534;
     }
 
-    .fix-box strong {
-      display: block;
-      margin-bottom: 3px;
-    }
+    .fix-box strong { display: block; margin-bottom: 3px; }
 
     .rec-item {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      padding: 14px 18px; border-bottom: 1px solid var(--border);
+      display: flex; gap: 12px; align-items: flex-start;
     }
 
     .rec-item:last-child { border-bottom: none; }
 
     .rec-num {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: rgba(37,99,235,0.08);
-      border: 1px solid rgba(37,99,235,0.2);
-      border-radius: 4px;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 600;
+      color: var(--accent); background: rgba(37,99,235,0.08);
+      border: 1px solid rgba(37,99,235,0.2); border-radius: 4px;
+      width: 22px; height: 22px; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; margin-top: 1px;
     }
 
-    .rec-text {
-      font-size: 0.82rem;
-      line-height: 1.5;
-    }
+    .rec-text { font-size: 0.82rem; line-height: 1.5; }
+    .rec-tag { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
 
-    .rec-tag {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-
+    /* ── Chat ── */
     .chat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-top: 16px;
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; margin-top: 16px; overflow: hidden;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .chat-messages {
-      padding: 16px 18px;
-      min-height: 100px;
-      max-height: 320px;
-      overflow-y: auto;
+      padding: 16px 18px; min-height: 100px; max-height: 320px; overflow-y: auto;
     }
 
-    .chat-msg {
-      margin-bottom: 14px;
-    }
+    .chat-msg { margin-bottom: 14px; }
 
     .chat-msg.ai .bubble {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px 8px 8px 2px;
-      padding: 12px 14px;
-      font-size: 0.82rem;
-      line-height: 1.6;
-      display: inline-block;
-      max-width: 90%;
-      white-space: normal;
-      overflow-wrap: anywhere;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px 8px 8px 2px; padding: 12px 14px;
+      font-size: 0.82rem; line-height: 1.6; display: inline-block;
+      max-width: 90%; white-space: normal; overflow-wrap: anywhere;
     }
 
-    .chat-msg.user {
-      text-align: right;
-    }
+    .chat-msg.user { text-align: right; }
 
     .chat-msg.user .bubble {
-      background: rgba(37,99,235,0.08);
-      border: 1px solid rgba(37,99,235,0.2);
-      border-radius: 8px 8px 2px 8px;
-      padding: 10px 14px;
-      font-size: 0.82rem;
-      line-height: 1.5;
-      display: inline-block;
-      max-width: 85%;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+      background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 8px 8px 2px 8px; padding: 10px 14px;
+      font-size: 0.82rem; line-height: 1.5; display: inline-block;
+      max-width: 85%; white-space: pre-wrap; overflow-wrap: anywhere;
     }
 
-    .chat-who {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-bottom: 3px;
-      font-family: 'IBM Plex Mono', monospace;
-    }
+    .chat-who { font-size: 0.7rem; color: var(--muted); margin-bottom: 3px; font-family: 'IBM Plex Mono', monospace; }
 
-    .chat-input-row {
-      display: flex;
-      gap: 8px;
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-    }
+    .chat-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); }
 
     .chat-input {
-      flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 12px;
-      color: var(--text);
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 0.83rem;
-      outline: none;
+      flex: 1; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 12px; color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 0.83rem; outline: none;
     }
 
-    .chat-input:focus {
-      border-color: var(--accent);
-    }
-
-    .chat-input::placeholder {
-      color: var(--muted);
-    }
+    .chat-input:focus { border-color: var(--accent); }
+    .chat-input::placeholder { color: var(--muted); }
 
     .chat-send {
-      background: var(--accent);
-      border: none;
-      border-radius: 6px;
-      padding: 8px 14px;
-      color: white;
-      font-size: 0.83rem;
-      cursor: pointer;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-weight: 500;
+      background: var(--accent); border: none; border-radius: 6px;
+      padding: 8px 14px; color: white; font-size: 0.83rem;
+      cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500;
     }
 
-    .chat-send:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #error-screen { display: none; text-align: center; padding: 60px 24px; }
+    #error-screen h3 { font-family: 'IBM Plex Mono', monospace; color: var(--danger); margin-bottom: 8px; }
+
+    .bubble h1,.bubble h2,.bubble h3,.bubble h4,.bubble h5,.bubble h6 {
+      margin: 0 0 0.55rem 0; font-weight: 600; line-height: 1.35; color: var(--text);
     }
-
-    #error-screen {
-      display: none;
-      text-align: center;
-      padding: 60px 24px;
-    }
-
-    #error-screen h3 {
-      font-family: 'IBM Plex Mono', monospace;
-      color: var(--danger);
-      margin-bottom: 8px;
-    }
-
-    /* Markdown styling inside AI bubbles */
-    .bubble h1,
-    .bubble h2,
-    .bubble h3,
-    .bubble h4,
-    .bubble h5,
-    .bubble h6 {
-      margin: 0 0 0.55rem 0;
-      font-weight: 600;
-      line-height: 1.35;
-      color: var(--text);
-    }
-
-    .bubble h1 { font-size: 1rem; }
-    .bubble h2 { font-size: 0.96rem; }
-    .bubble h3 { font-size: 0.92rem; }
-
-    .bubble p {
-      margin: 0 0 0.75rem 0;
-    }
-
-    .bubble p:last-child {
-      margin-bottom: 0;
-    }
-
-    .bubble ul,
-    .bubble ol {
-      margin: 0 0 0.75rem 1.15rem;
-      padding-left: 0.25rem;
-    }
-
-    .bubble li {
-      margin-bottom: 0.25rem;
-    }
-
-    .bubble strong {
-      font-weight: 600;
-    }
-
-    .bubble em {
-      font-style: italic;
-    }
-
+    .bubble h1 { font-size: 1rem; } .bubble h2 { font-size: 0.96rem; } .bubble h3 { font-size: 0.92rem; }
+    .bubble p { margin: 0 0 0.75rem 0; } .bubble p:last-child { margin-bottom: 0; }
+    .bubble ul,.bubble ol { margin: 0 0 0.75rem 1.15rem; padding-left: 0.25rem; }
+    .bubble li { margin-bottom: 0.25rem; }
+    .bubble strong { font-weight: 600; } .bubble em { font-style: italic; }
     .bubble code {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.78rem;
-      background: rgba(15,23,42,0.06);
-      border: 1px solid rgba(15,23,42,0.08);
-      border-radius: 5px;
-      padding: 0.12rem 0.35rem;
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+      background: rgba(15,23,42,0.06); border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 5px; padding: 0.12rem 0.35rem;
     }
-
     .bubble pre {
-      background: #0f172a;
-      color: #e2e8f0;
-      border-radius: 8px;
-      padding: 12px 14px;
-      overflow-x: auto;
-      margin: 0.75rem 0;
-      border: 1px solid #1e293b;
+      background: #0f172a; color: #e2e8f0; border-radius: 8px;
+      padding: 12px 14px; overflow-x: auto; margin: 0.75rem 0; border: 1px solid #1e293b;
     }
-
     .bubble pre code {
-      background: transparent;
-      border: none;
-      color: inherit;
-      padding: 0;
-      font-size: 0.76rem;
-      line-height: 1.55;
-      display: block;
-      white-space: pre;
+      background: transparent; border: none; color: inherit; padding: 0;
+      font-size: 0.76rem; line-height: 1.55; display: block; white-space: pre;
     }
-
-    .bubble blockquote {
-      border-left: 3px solid var(--accent);
-      padding-left: 12px;
-      margin: 0.75rem 0;
-      color: #334155;
-    }
-
-    .bubble hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0.85rem 0;
-    }
-
-    .bubble table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.75rem 0;
-      font-size: 0.78rem;
-    }
-
-    .bubble th,
-    .bubble td {
-      border: 1px solid var(--border);
-      padding: 6px 8px;
-      text-align: left;
-    }
-
-    .bubble th {
-      background: rgba(15,23,42,0.04);
-      font-weight: 600;
-    }
+    .bubble blockquote { border-left: 3px solid var(--accent); padding-left: 12px; margin: 0.75rem 0; color: #334155; }
+    .bubble hr { border: none; border-top: 1px solid var(--border); margin: 0.85rem 0; }
+    .bubble table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.78rem; }
+    .bubble th,.bubble td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+    .bubble th { background: rgba(15,23,42,0.04); font-weight: 600; }
 
     @media (max-width: 768px) {
-      .top-row,
-      .bottom-row {
-        grid-template-columns: 1fr;
-      }
-
-      .nist-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .chat-msg.ai .bubble,
-      .chat-msg.user .bubble {
-        max-width: 100%;
-      }
+      .top-row, .bottom-row { grid-template-columns: 1fr; }
+      .nist-grid { grid-template-columns: repeat(3, 1fr); }
+      .chat-msg.ai .bubble, .chat-msg.user .bubble { max-width: 100%; }
     }
   </style>
 </head>
@@ -780,12 +487,22 @@
 
     <div id="dashboard-screen">
       <div class="top-row">
+
         <div class="score-card">
-          <div class="score-label">Risk Score</div>
-          <div class="score-num" id="score-num">--</div>
-          <div class="score-badge" id="score-badge">--</div>
-          <div class="score-sub">out of 100 · lower is worse</div>
-          <div class="score-summary" id="score-summary"></div>
+          <div class="score-top">
+            <div class="score-label">Risk Score</div>
+            <div class="score-num" id="score-num">--</div>
+            <div class="score-badge" id="score-badge">--</div>
+            <div class="score-sub">out of 100 · higher is more dangerous</div>
+          </div>
+          <div class="score-about">
+            <div class="score-about-label">About this app</div>
+            <div class="score-about-text" id="score-about-text">Analyzing...</div>
+          </div>
+          <div class="score-vulns">
+            <div class="score-vulns-label">Security summary</div>
+            <div class="score-vulns-text" id="score-summary"></div>
+          </div>
         </div>
 
         <div class="nist-card">
@@ -816,14 +533,12 @@
           <span class="card-title">Ask AI About This Repo</span>
           <span class="card-count">Context-aware · knows your scan results</span>
         </div>
-
         <div class="chat-messages" id="chat-messages">
           <div class="chat-msg ai">
             <div class="chat-who">SecureScan AI</div>
             <div class="bubble" id="chat-intro">Scan complete. Ask me anything about the vulnerabilities found or how to fix them.</div>
           </div>
         </div>
-
         <div class="chat-input-row">
           <input class="chat-input" id="chat-input" type="text" placeholder="Ask about a vulnerability or how to fix something..."/>
           <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
@@ -835,10 +550,7 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const repoFullName = params.get('repo');
-
-    if (!repoFullName) {
-      window.location = '/repos.html';
-    }
+    if (!repoFullName) window.location = '/repos.html';
 
     const [owner, repo] = repoFullName.split('/');
     let scanResult = null;
@@ -847,52 +559,35 @@
     document.getElementById('nav-repo').textContent = repoFullName;
     document.getElementById('page-title').textContent = `Scanning ${repoFullName}...`;
 
-    // Markdown config
-    marked.setOptions({
-      gfm: true,
-      breaks: true
-    });
+    marked.setOptions({ gfm: true, breaks: true });
 
     function escapeHtml(str = '') {
       return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
     function renderMarkdown(text = '') {
-      const rawHtml = marked.parse(String(text || ''));
-      return DOMPurify.sanitize(rawHtml, {
-        USE_PROFILES: { html: true }
-      });
+      return DOMPurify.sanitize(marked.parse(String(text || '')), { USE_PROFILES: { html: true } });
     }
 
-    function safeText(text = '') {
-      return escapeHtml(String(text || ''));
-    }
+    function safeText(text = '') { return escapeHtml(String(text || '')); }
 
-    fetch('/api/me')
-      .then(r => r.json())
-      .then(data => {
-        if (data.user) {
-          document.getElementById('nav-avatar').src = data.user.avatar_url;
-          document.getElementById('nav-username').textContent = data.user.login;
-        }
-      })
-      .catch(() => {});
+    fetch('/api/me').then(r => r.json()).then(data => {
+      if (data.user) {
+        document.getElementById('nav-avatar').src = data.user.avatar_url;
+        document.getElementById('nav-username').textContent = data.user.login;
+      }
+    }).catch(() => {});
 
     function updateProgress(msg) {
       document.getElementById('scan-status').textContent = msg;
-
       const log = document.getElementById('scan-log');
       const line = document.createElement('div');
       line.className = 'log-line';
       line.textContent = msg;
       log.appendChild(line);
       log.scrollTop = log.scrollHeight;
-
       scanProgress = Math.min(scanProgress + 10, 90);
       document.getElementById('progress-bar').style.width = scanProgress + '%';
     }
@@ -904,8 +599,7 @@
       document.getElementById('btn-rescan').disabled = true;
       document.getElementById('scan-log').innerHTML = '';
       document.getElementById('page-title').textContent = isRescan
-        ? `Rescanning ${repoFullName}...`
-        : `Scanning ${repoFullName}...`;
+        ? `Rescanning ${repoFullName}...` : `Scanning ${repoFullName}...`;
 
       scanProgress = 5;
       document.getElementById('progress-bar').style.width = '5%';
@@ -915,23 +609,15 @@
 
       evtSource.onmessage = (e) => {
         const { type, data } = JSON.parse(e.data);
-
-        if (type === 'status') {
-          updateProgress(data);
-        }
-
+        if (type === 'status') updateProgress(data);
         if (type === 'questions') {
           evtSource.close();
           scanProgress = 100;
           document.getElementById('progress-bar').style.width = '100%';
           document.getElementById('scan-status').textContent = 'Scan complete! Loading questions...';
           sessionStorage.setItem('scan_questions_' + repoFullName, JSON.stringify(data.questions));
-
-          setTimeout(() => {
-            window.location = `/questions.html?repo=${encodeURIComponent(repoFullName)}`;
-          }, 800);
+          setTimeout(() => { window.location = `/questions.html?repo=${encodeURIComponent(repoFullName)}`; }, 800);
         }
-
         if (type === 'done') {
           evtSource.close();
           scanProgress = 100;
@@ -939,11 +625,7 @@
           document.getElementById('scan-status').textContent = 'Scan complete!';
           setTimeout(() => renderDashboard(data), 600);
         }
-
-        if (type === 'error') {
-          evtSource.close();
-          showError(data);
-        }
+        if (type === 'error') { evtSource.close(); showError(data); }
       };
 
       evtSource.onerror = () => {
@@ -959,6 +641,17 @@
       document.getElementById('btn-rescan').disabled = false;
     }
 
+    // NIST metadata — abbreviation + short description shown under each block
+    const nistMeta = {
+      identify: { abbr: 'I', desc: 'Know your assets & risks' },
+      protect:  { abbr: 'P', desc: 'Defend with access controls & encryption' },
+      detect:   { abbr: 'D', desc: 'Monitor & catch threats early' },
+      respond:  { abbr: 'R', desc: 'Act fast when incidents happen' },
+      recover:  { abbr: 'R', desc: 'Restore systems after an attack' },
+    };
+
+    const gradeToPercent = { A: 92, B: 78, C: 58, D: 35, F: 12 };
+
     function renderDashboard(result) {
       scanResult = result;
 
@@ -966,25 +659,20 @@
       document.getElementById('dashboard-screen').style.display = 'block';
       document.getElementById('btn-rescan').disabled = false;
       document.getElementById('page-title').textContent = `Risk Assessment — ${repoFullName}`;
-      document.getElementById('scan-time').textContent = `Scanned just now · ${result.vulnerabilities?.length || 0} issues found`;
+      document.getElementById('scan-time').textContent =
+        `Scanned just now · ${result.vulnerabilities?.length || 0} issues found`;
 
+      // ── Score ──
       const score = result.overall_score || 0;
       const scoreEl = document.getElementById('score-num');
       const badgeEl = document.getElementById('score-badge');
       scoreEl.textContent = score;
 
       const riskLevel = result.risk_level || 'HIGH';
-      const colorMap = {
-        CRITICAL: '#b91c1c',
-        HIGH: '#dc2626',
-        MEDIUM: '#d97706',
-        LOW: '#16a34a'
-      };
+      const colorMap = { CRITICAL:'#b91c1c', HIGH:'#dc2626', MEDIUM:'#d97706', LOW:'#16a34a' };
       const bgMap = {
-        CRITICAL: 'rgba(185,28,28,0.1)',
-        HIGH: 'rgba(220,38,38,0.1)',
-        MEDIUM: 'rgba(217,119,6,0.1)',
-        LOW: 'rgba(22,163,74,0.1)'
+        CRITICAL:'rgba(185,28,28,0.1)', HIGH:'rgba(220,38,38,0.1)',
+        MEDIUM:'rgba(217,119,6,0.1)', LOW:'rgba(22,163,74,0.1)'
       };
 
       scoreEl.style.color = colorMap[riskLevel] || '#dc2626';
@@ -993,58 +681,50 @@
       badgeEl.style.borderColor = colorMap[riskLevel];
       badgeEl.style.background = bgMap[riskLevel];
 
+      // ── About + summary — now separate fields from Claude ──
+      document.getElementById('score-about-text').textContent = result.app_description || result.summary || '';
       document.getElementById('score-summary').textContent = result.summary || '';
 
+      // ── NIST grid ──
       const nistGrid = document.getElementById('nist-grid');
       const nist = result.nist_scores || {};
       const categories = ['identify', 'protect', 'detect', 'respond', 'recover'];
 
       nistGrid.innerHTML = categories.map(cat => {
         const grade = (nist[cat] || 'C').toUpperCase();
-        const gradeClass = {
-          A: 'grade-a',
-          B: 'grade-b',
-          C: 'grade-c',
-          D: 'grade-d',
-          F: 'grade-f'
-        }[grade] || 'grade-c';
+        const gradeClass = { A:'grade-a', B:'grade-b', C:'grade-c', D:'grade-d', F:'grade-f' }[grade] || 'grade-c';
+        const barClass   = { A:'bar-a',   B:'bar-b',   C:'bar-c',   D:'bar-d',   F:'bar-f'  }[grade] || 'bar-c';
+        const pct  = gradeToPercent[grade] || 50;
+        const meta = nistMeta[cat];
 
         return `
           <div class="nist-item">
-            <div class="nist-grade ${gradeClass}">${safeText(grade)}</div>
-            <div class="nist-name">${safeText(cat.charAt(0).toUpperCase() + cat.slice(1))}</div>
+            <div class="nist-letter ${gradeClass}">${safeText(grade)}</div>
+            <div class="nist-abbr">${safeText(meta.abbr)}</div>
+            <div class="nist-bar-wrap">
+              <div class="nist-bar-fill ${barClass}" style="width:${pct}%"></div>
+            </div>
+            <div class="nist-pct">${pct}%</div>
+            <div class="nist-desc-text">${safeText(meta.desc)}</div>
           </div>
         `;
       }).join('');
 
+      // ── Vulnerabilities ──
       const vulns = Array.isArray(result.vulnerabilities) ? [...result.vulnerabilities] : [];
-      const sevOrder = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
-
+      const sevOrder = { CRITICAL:0, HIGH:1, MEDIUM:2, LOW:3 };
       vulns.sort((a, b) => (sevOrder[a.severity] ?? 99) - (sevOrder[b.severity] ?? 99));
 
-      const critCount = vulns.filter(v => (v.severity || '').toUpperCase() === 'CRITICAL').length;
+      const critCount = vulns.filter(v => (v.severity||'').toUpperCase() === 'CRITICAL').length;
       document.getElementById('vuln-count').textContent =
         `${vulns.length} issues${critCount > 0 ? ` · ${critCount} critical` : ''}`;
 
       document.getElementById('vuln-list').innerHTML = vulns.map((v, i) => {
         const sev = (v.severity || 'LOW').toUpperCase();
-        const dotClass = {
-          CRITICAL: 'dot-critical',
-          HIGH: 'dot-high',
-          MEDIUM: 'dot-medium',
-          LOW: 'dot-low'
-        }[sev] || 'dot-low';
-
-        const badgeClass = {
-          CRITICAL: 'sb-critical',
-          HIGH: 'sb-high',
-          MEDIUM: 'sb-medium',
-          LOW: 'sb-low'
-        }[sev] || 'sb-low';
-
+        const dotClass   = { CRITICAL:'dot-critical', HIGH:'dot-high', MEDIUM:'dot-medium', LOW:'dot-low' }[sev] || 'dot-low';
+        const badgeClass = { CRITICAL:'sb-critical',  HIGH:'sb-high',  MEDIUM:'sb-medium',  LOW:'sb-low'  }[sev] || 'sb-low';
         const nistCategory = v.nist_category
-          ? v.nist_category.charAt(0).toUpperCase() + v.nist_category.slice(1)
-          : '';
+          ? v.nist_category.charAt(0).toUpperCase() + v.nist_category.slice(1) : '';
 
         return `
           <div class="vuln-item" onclick="toggleVuln(${i})">
@@ -1065,6 +745,7 @@
         `;
       }).join('');
 
+      // ── Recommendations ──
       const recs = Array.isArray(result.recommendations) ? result.recommendations : [];
       document.getElementById('rec-list').innerHTML = recs.map((r, i) => `
         <div class="rec-item">
@@ -1076,6 +757,7 @@
         </div>
       `).join('');
 
+      // ── Chat intro ──
       document.getElementById('chat-intro').innerHTML = renderMarkdown(
         `I've analyzed **${repoFullName}**. ${result.summary || ''} Ask me anything about these findings or how to fix them.`
       );
@@ -1093,7 +775,6 @@
 
       input.value = '';
       document.getElementById('chat-send').disabled = true;
-
       appendChat('user', msg);
 
       try {
@@ -1110,7 +791,6 @@
             }
           })
         });
-
         const data = await res.json();
         appendChat('ai', data.reply || 'Sorry, could not get a response.');
       } catch {
@@ -1125,25 +805,15 @@
       const container = document.getElementById('chat-messages');
       const div = document.createElement('div');
       div.className = `chat-msg ${role}`;
-
       const who = role === 'ai' ? 'SecureScan AI' : 'You';
-      const bubbleContent = role === 'ai'
-        ? renderMarkdown(text)
-        : safeText(text);
-
-      div.innerHTML = `
-        <div class="chat-who">${who}</div>
-        <div class="bubble">${bubbleContent}</div>
-      `;
-
+      const bubbleContent = role === 'ai' ? renderMarkdown(text) : safeText(text);
+      div.innerHTML = `<div class="chat-who">${who}</div><div class="bubble">${bubbleContent}</div>`;
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
     }
 
     document.getElementById('chat-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        sendChat();
-      }
+      if (e.key === 'Enter') sendChat();
     });
 
     const isReady = params.get('ready');
